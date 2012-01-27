@@ -4,12 +4,13 @@ import sys
 from features import *                                                                                                   
 
 class Feature():
-  def __init__(self, kind, name, actionName, fields, radius, options ) :
+  def __init__(self, kind, name, actionName, fields, radius, cutoff, options ) :
     self.name = name
     self.kind = kind
     self.actionName = actionName
     self.fields = fields
     self.radius = radius
+    self.cutoff = cutoff
     self.options = options
     if kind=="lex" :
       if self.options != {}:
