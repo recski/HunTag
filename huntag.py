@@ -4,9 +4,9 @@ from collections import defaultdict
 from optparse import OptionParser
 
 from Feature import Feature
+from tools import *
 
 def main_maxentTrain(modelFile, featureSet):
-  
   pass
 
 def main_bigramTrain(modelFile):
