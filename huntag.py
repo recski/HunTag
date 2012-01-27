@@ -3,6 +3,8 @@ import sys
 from collections import defaultdict
 from optparse import OptionParser
 
+from Feature import Feature
+
 def main_maxentTrain(modelFile, featureSet):
   
   pass
@@ -39,7 +41,7 @@ def getFeatureSet(cfgFile):
     radius = defaultRadius
     cutoff = defaultCutoff
     options = optsByFeature[name]
-    feat = Feature( kind, name, actionName, fields, radius, cutoff, options )
+    feat = Feature( type, name, actionName, fields, radius, cutoff, options )
     features[name]=feat
   
   return features  
@@ -69,8 +71,8 @@ def main():
     elif task == 'tag':
       main_tag(modelFile, featureSet)
     else:
-      sys.stderr.write('invalid task: %s\n
-                       Run huntag.py --help for more information\n' % task)
+      sys.stderr.write('invalid task: %s\n'+
+                       'Run huntag.py --help for more information\n' % task)
   return
 
 if __name__=='__main__':
