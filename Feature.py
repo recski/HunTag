@@ -60,6 +60,7 @@ class Feature():
     if self.options == {}:
       return self.function( sentence, self.fields )    
     else:
+      #print; '@'
       return self.function( sentence, self.fields, self.options )    
 
   def evalSentence(self, sentence) :
@@ -68,7 +69,8 @@ class Feature():
     elif self.kind=="lex" :
       featVec = self.evalSentence_Lex(sentence)
     elif self.kind=="sentence" :
-      featVec = self.evalSentence_Sentence(sentence)
+      #print self.evalSentence_Sentence(sentence)
+      return self.evalSentence_Sentence(sentence)
 
     multipliedFeatVec = []
 

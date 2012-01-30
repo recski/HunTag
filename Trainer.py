@@ -15,6 +15,7 @@ class Trainer():
     for sen in sentenceIterator(data):
       sentenceFeats = [ [] for _ in range(len(sen)) ]
       for name, feature in self.features.items():
+        #print name
         for c, feats in enumerate(feature.evalSentence(sen)):
           sentenceFeats[c]+=feats
       

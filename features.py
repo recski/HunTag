@@ -227,11 +227,11 @@ def msdPosAndChar(msd):
   return f
 
 def prefix(word, options):
-  n = options['n']
+  n = int(options['n'])
   return  [ word[0:n] ] 
 
 def suffix(word, options):
-  n = options['n']
+  n = int(options['n'])
   return  [ word[-n:] ]
 
 
@@ -415,8 +415,8 @@ def getPosTag(kr):
 def krPatts(sen, fields, options, fullKr=False):
   lang = options['lang']
   assert lang in ('en', 'hu')
-  minLength = options['minLength']
-  maxLength = options['maxLength']
+  minLength = int(options['minLength'])
+  maxLength = int(options['maxLength'])
   rad = int(options['rad'])
   
   assert len(fields)==1
@@ -432,6 +432,7 @@ def krPatts(sen, fields, options, fullKr=False):
   assert len(krVec) == len(sen)
   #sys.stderr.write(str(len(sen))+'words\n')
   for c in range(len(krVec)):
+    #print '@'
     #sys.stderr.write('word '+str(c)+'\n')
     for i in range (-rad, rad):
       for j in range(-rad+1, rad+2):
@@ -451,9 +452,9 @@ def krPatts(sen, fields, options, fullKr=False):
   return featVec 
 
 def parsePatts(sen, fields, options, fullKr=False):
-  minLength = options['minLength']
-  maxLength = options['maxLength']
-  rad = options['rad']
+  minLength = int(options['minLength'])
+  maxLength = int(options['maxLength'])
+  rad = int(options['rad'])
   
   assert len(fields)==1
   f = fields[0]
