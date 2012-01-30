@@ -9,8 +9,8 @@ class Feature():
     self.kind = kind
     self.actionName = actionName
     self.fields = fields
-    self.radius = radius
-    self.cutoff = cutoff
+    self.radius = int(radius)
+    self.cutoff = int(cutoff)
     self.options = options
     if kind=="lex" :
       if self.options != {}:
@@ -62,7 +62,7 @@ class Feature():
     else:
       return self.function( sentence, self.fields, self.options )    
 
-  def evalSentence(self, sentence, keepZero) :
+  def evalSentence(self, sentence) :
     if self.kind=="token" :
       featVec = self.evalSentence_Token(sentence)
     elif self.kind=="lex" :
@@ -80,8 +80,7 @@ class Feature():
 	  continue
         
         currentWordFeatures = featVec[pos]
-        if not keepZero:
-          currentWordFeatures = [feat for feat in currentWordFeatures if feat!=0]
+        currentWordFeatures = [feat for feat in currentWordFeatures if feat!=0]
         for feat in currentWordFeatures :
           multipliedFeatVec[c].append(str(i)+'_'+self.name+'='+str(feat))
             

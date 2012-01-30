@@ -4,10 +4,13 @@ from collections import defaultdict
 from optparse import OptionParser
 
 from Feature import Feature
+from Trainer import Trainer
 from tools import *
 
-def main_maxentTrain(modelFile, featureSet):
-  pass
+def main_maxentTrain(modelFile, featureSet, options):
+  trainer = Trainer(featureSet, options.outFeatFile)
+  trainer.addEvents(sys.stdin)
+  trainer.train(options.iter, options.gauss, modelFile)
 
 def main_bigramTrain(modelFile):
   pass
@@ -48,13 +51,16 @@ def getFeatureSet(cfgFile):
 
 def getParser():
   parser = OptionParser()  
-  parser.add_option('-i', '--iterations', dest='iter',
+  parser.add_option('-i', '--iterations', dest='iter', type='int',
                     help='train with a maximum of N iterations', metavar='N')
-  parser.add_option('-g', '--gauss', dest='gauss',
+  parser.add_option('-g', '--gauss', dest='gauss', type='int', default=0,
                     help='train using a Gaussian penalty of N', metavar='N')
-  parser.add_option('-l', '--language-model-weight', dest='lmw',
+  parser.add_option('-l', '--language-model-weight', dest='lmw', type='float',
+                    default=0.5,
                     help='set relative weight of the language model to L',
                     metavar='L')
+  parser.add_option('-f', '--feature-file', dest='outFeatFile',
+                    help='write training events to FILE', metavar='FILE')
   return parser
   
 def main():
@@ -67,7 +73,7 @@ def main():
     cfgFile = args[2]
     featureSet = getFeatureSet(cfgFile)
     if task == 'maxent-train':
-      main_maxentTrain(modelFile, featureSet)
+      main_maxentTrain(modelFile, featureSet, options)
     elif task == 'tag':
       main_tag(modelFile, featureSet)
     else:

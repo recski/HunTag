@@ -201,7 +201,7 @@ def getForm(word):
 #  return f
 
 def ngrams(word, options) :
-  n = options['n']
+  n = int(options['n'])
   f=[]
   for c in range(max(0, len(word)-n+1)):
     if c==0:
@@ -412,7 +412,7 @@ def krPatts(sen, fields, options, fullKr=False):
   assert lang in ('en', 'hu')
   minLength = options['minLength']
   maxLength = options['maxLength']
-  rad = options['rad']
+  rad = int(options['rad'])
   
   assert len(fields)==1
   f = fields[0]
