@@ -257,13 +257,18 @@ def krPieces(kr) :
   for koddarab in pieces:
     if koddarab=='PLUR':
       processed = pos+"_PLUR"
-    else:
-      if koddarab in ('1','2') :
-        processed = last+"_"+koddarab
-      else :
-        processed = koddarab
+    elif koddarab in ('1','2') :
+      processed = last+"_"+koddarab
     
-    feats.append(processed)
+    elif last == 'CAS':
+      processed = last+'_'+koddarab
+    
+    else :
+      processed = koddarab
+    
+    if processed!='CAS':
+      feats.append(processed)
+    
     last = koddarab
   
   return [ feat for feat in feats if feat ]
