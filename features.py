@@ -74,6 +74,13 @@ def hasDashOperator(form):
         if c is '-':
             return [int(True)]
     return [int(False)]
+    
+def hasUnderscoreOperator(form):
+    hasDash = False
+    for c in form:  
+        if c is '_':
+            return [int(True)]
+    return [int(False)]
 
 def hasPeriodOperator(form):
     hasPeriod = False

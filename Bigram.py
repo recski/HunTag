@@ -7,9 +7,12 @@ class Bigram:
     def __init__(self, smooth):
         self.reset()
         self.boundarySymbol = 'S'
-        self.logSmooth=math.log(smooth)
+        self.smooth = smooth
+        self.logSmooth=math.log(self.smooth)
         self.updatewarning = 'WARNING: Probabilities have not been \
 	                     recalculated since last input!'
+        self.tags = set()
+        
     def reset(self):
         self.bigramCount=defaultdict(int)
         self.bigramLogProb={}
@@ -32,16 +35,20 @@ class Bigram:
         self.updated=False
 		  
     def count(self):
-        self.bigramLogProb={}
-        self.unigramLogProb={}
+        self.tags = set()
+        self.bigramLogProb = {}
+        self.unigramLogProb = {}
+	self.logSmooth = math.log(self.smooth)
 	for pair, count in self.bigramCount.items():
             unigramCount = self.unigramCount[pair[0]]
             prob = count/unigramCount
             logProb = math.log(prob)
-            print pair, count, unigramCount, prob, logProb
+            #print pair, count, unigramCount, prob, logProb
             self.bigramLogProb[pair] = logProb
 	
 	for tag, count in self.unigramCount.items():
+	    #if tag != self.boundarySymbol:
+	    self.tags.add(tag)
             self.unigramLogProb[tag] = math.log(count/
                                        self.obsCount)
 	
@@ -61,20 +68,29 @@ class Bigram:
 	return math.exp(self.logProb(egy,ketto)) 
   
     def writeToFile(self, fileName):
-        tags = self.unigramLogProb.keys()
         f = open(fileName, 'w')
-        for t1 in tags:
-            for t2 in tags:
+        f.write(str(self.smooth)+'\n')
+        tagProbs = [tag+':'+str(self.unigramLogProb[tag]) for tag in self.tags if tag!=self.boundarySymbol]
+        f.write(' '.join(tagProbs)+'\n')
+        for t1 in self.tags:
+            for t2 in self.tags:
                 f.write('%s\t%s\t%.8f\n' % (t1, t2, self.logProb(t1,t2)))
         f.close()
   
-    def readFromFile(self, fileName):
-        if self.obsCount>0:
-            logging.warning('overwriting model from file')  
-        self.reset()
-        for line in file(fileName):
+    @staticmethod
+    def getModelFromFile(fileName):
+        modelFile = open(fileName)
+        smooth = float(modelFile.readline())
+        model = Bigram(smooth)
+        tagProbs = modelFile.readline().split()
+        for tagAndProb in tagProbs:
+            tag, prob = tagAndProb.split(':')
+            model.tags.add(tag)
+            model.unigramLogProb[tag] = float(prob)
+        for line in modelFile:
           l = line.split()
           t1, t2, logProb = l[0],l[1],float(l[2])
-          self.bigramLogProb[(t1,t2)] = logProb
-       
+          model.bigramLogProb[(t1,t2)] = logProb
+        return model
+        
   
