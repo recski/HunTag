@@ -1,4 +1,4 @@
-from Lexicon import Lexicon
+from lexicon import Lexicon
 import sys
 
 from features import *                                                                                                   

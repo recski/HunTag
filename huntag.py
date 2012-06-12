@@ -6,9 +6,9 @@ maxent.set_verbose(1)
 
 from viterbi import viterbi
 
-from Feature import Feature
-from Trainer import Trainer
-from Bigram import Bigram
+from feature import Feature
+from trainer import Trainer
+from bigram import Bigram
 from tools import *
 
 import math
@@ -43,7 +43,7 @@ def main_tag(maxentModelFile, bigramModelFile, featureSet, options, input=sys.st
         _, bestTagging = viterbi(transProbs, logTagProbsByPos)
         taggedSen = addTagging(sen, bestTagging)
         if senCount%1000 == 0:
-          sys.stderr.write(str(senCount)+'...')
+            sys.stderr.write(str(senCount)+'...')
         writeSentence(taggedSen)
     sys.stderr.write(str(senCount)+'...done\n')
 
