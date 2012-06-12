@@ -9,6 +9,8 @@ http://homepages.inf.ed.ac.uk/lzhang10/maxent_toolkit.html
 Based on training data, Huntag can perform any kind of sequential sentence
 tagging and has been used for NP chunking and Named Entity Recognition.
 
+DATA FORMAT
+
 Input data must be a tab-separated file with one word per line and an empty
 line to mark sentence boundaries. Each line must contain the same number of
 fields and the last field must contain the correct tag for the word, which
@@ -19,6 +21,8 @@ for words constituting a chunk themselves (1-NP) and one for the last words
 of multi-word phrases (E-NP). The first two characters of answer tags
 should always conform to one of these two conventions, the rest may be any
 string describing the category. 
+
+FEATURES
 
 The flexibility of Huntag comes from the fact that it will generate any kind
 of features from the input data given the appropriate python functions.
