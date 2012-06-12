@@ -1,5 +1,3 @@
-import sys
-
 from collections import defaultdict
 from optparse import OptionParser
 
@@ -12,6 +10,9 @@ from Feature import Feature
 from Trainer import Trainer
 from Bigram import Bigram
 from tools import *
+
+import math
+import sys
 
 def main_maxentTrain(modelFile, featureSet, options, input=sys.stdin):
     trainer = Trainer(featureSet, options.outFeatFile)
@@ -38,7 +39,8 @@ def main_tag(maxentModelFile, bigramModelFile, featureSet, options, input=sys.st
         senCount += 1
         senFeats = featurizeSentence(sen, featureSet)
         tagProbsByPos = [dict(maxentModel.eval_all(feats)) for feats in senFeats]
-        _, bestTagging = viterbi(transProbs, tagProbsByPos)
+        logTagProbsByPos = [dict([(tag, math.log(prob)) for tag, prob in d.items()]) for d in tagProbsByPos]
+        _, bestTagging = viterbi(transProbs, logTagProbsByPos)
         taggedSen = addTagging(sen, bestTagging)
         if senCount%1000 == 0:
           sys.stderr.write(str(senCount)+'...')
