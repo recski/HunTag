@@ -8,7 +8,7 @@ taken into consideration
   the probability distribution over tags as returned by the maxent model
 - all probabilities are expected to be in log space"""
 
-def viterbi(transProbs, tagProbsByPos, boundarySymbol='S'):
+def viterbi(transProbs, tagProbsByPos, languageModelWeight, boundarySymbol='S'):
     V = [{}]
     path = {}
     states = transProbs.tags
@@ -24,17 +24,17 @@ def viterbi(transProbs, tagProbsByPos, boundarySymbol='S'):
  
         for y in states:
             if t == len(tagProbsByPos):
-                (prob, state) = max([transProbs.logProb(y, boundarySymbol) + \
+                (prob, state) = max([(languageModelWeight/2)*transProbs.logProb(y, boundarySymbol) + \
                                 (V[t-1][y0] + \
-                                transProbs.logProb(y0,y) + \
-                                tagProbsByPos[t][y] - \
+                                (languageModelWeight/2)*transProbs.logProb(y0,y) + \
+                                (1-languageModelWeight)*tagProbsByPos[t][y] - \
                                 transProbs.unigramLogProb[y], #dividing by a priori probability so as not to count it twice
                                 y0) for y0 in states])
             else:
                 (prob, state) = max([(V[t-1][y0] + \
-                                transProbs.logProb(y0,y) + \
-                                tagProbsByPos[t][y] - \
-                                transProbs.unigramLogProb[y], #dividing by a priori probability so as not to count it twice
+                                languageModelWeight*transProbs.logProb(y0,y) + \
+                                (1-languageModelWeight)*tagProbsByPos[t][y] - \
+                                languageModelWeight*transProbs.unigramLogProb[y], #dividing by a priori probability so as not to count it twice
                                 y0) for y0 in states])
             V[t][y] = prob
             newpath[y] = path[state] + [y]

@@ -40,7 +40,7 @@ def main_tag(maxentModelFile, bigramModelFile, featureSet, options, input=sys.st
         senFeats = featurizeSentence(sen, featureSet)
         tagProbsByPos = [dict(maxentModel.eval_all(feats)) for feats in senFeats]
         logTagProbsByPos = [dict([(tag, math.log(prob)) for tag, prob in d.items()]) for d in tagProbsByPos]
-        _, bestTagging = viterbi(transProbs, logTagProbsByPos)
+        _, bestTagging = viterbi(transProbs, logTagProbsByPos, options.lmw)
         taggedSen = addTagging(sen, bestTagging)
         if senCount%1000 == 0:
             sys.stderr.write(str(senCount)+'...')
