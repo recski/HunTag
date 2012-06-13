@@ -1,3 +1,4 @@
+#bigram.py contains the Bigram class which implements a simple bigram model which can be built from observations of type (word1, word2). Bigram models are built and used by HunTag
 import sys
 import logging
 import math

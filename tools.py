@@ -1,4 +1,4 @@
-
+#Miscellaneous tools for HunTag
 def sentenceIterator(input):
     currSen = []
     for line in input:

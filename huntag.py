@@ -95,8 +95,8 @@ def getParser():
                       help='train using a Gaussian penalty of N', metavar='N')
                                        
     parser.add_option('-l', '--language-model-weight', dest='lmw',
-		      type='float', default=0.5,
-		      help='set relative weight of the language model to L',
+		              type='float', default=0.5,
+		              help='set relative weight of the language model to L',
                       metavar='L')
                                         
     parser.add_option('-f', '--feature-file', dest='outFeatFile',
@@ -104,7 +104,7 @@ def getParser():
                                         
     parser.add_option('-t', '--tag-field', dest='tagField', type='int',
                       help="""specify FIELD containing the tags to build bigram
-		      model from""", metavar='FIELD')
+		              model from""", metavar='FIELD')
     return parser
     
 def main():
@@ -122,7 +122,7 @@ def main():
                              featureSet, options)
         else:
             sys.stderr.write("""invalid task: %s\nRun huntag.py --help
-			     for more information\n""" % task)
+			                    for more information\n""" % task)
     return
 
 if __name__=='__main__':
