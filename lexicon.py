@@ -5,7 +5,7 @@ import sys
 
 class Lexicon():
     def __init__(self, file):
-        sys.stderr.write('opening '+file+'\n')
+        #sys.stderr.write('opening '+file+'\n')
         self.list = set()
         self.endParts = set()
         self.midParts = set()

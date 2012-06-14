@@ -28,6 +28,10 @@ def main_bigramTrain(modelFile, tagField, input=sys.stdin):
     bigramModel.writeToFile(modelFile)
         
 def main_tag(maxentModelFile, bigramModelFile, featureSet, options, input=sys.stdin):
+    lmw = options.lmw
+    if lmw < 0 or lmw >=1:
+        sys.stderr.write('ERROR: language model weight must be non-negative and less than 1\n')
+        sys.exit(-1)
     sys.stderr.write('loading transition model...')
     transProbs = Bigram.getModelFromFile(bigramModelFile)
     sys.stderr.write('done\nloading maxent model...')
@@ -40,7 +44,7 @@ def main_tag(maxentModelFile, bigramModelFile, featureSet, options, input=sys.st
         senFeats = featurizeSentence(sen, featureSet)
         tagProbsByPos = [dict(maxentModel.eval_all(feats)) for feats in senFeats]
         logTagProbsByPos = [dict([(tag, math.log(prob)) for tag, prob in d.items()]) for d in tagProbsByPos]
-        _, bestTagging = viterbi(transProbs, logTagProbsByPos, options.lmw)
+        _, bestTagging = viterbi(transProbs, logTagProbsByPos, lmw)
         taggedSen = addTagging(sen, bestTagging)
         if senCount%1000 == 0:
             sys.stderr.write(str(senCount)+'...')
