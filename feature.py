@@ -58,7 +58,7 @@ class Feature():
         elif self.kind=="lex" :
             featVec = self.evalSentence_Lex(sentence)
         elif self.kind=="sentence" :
-            return self.evalSentence_Sentence(sentence)
+            featVec = self.evalSentence_Sentence(sentence)
 
         multipliedFeatVec = []
 

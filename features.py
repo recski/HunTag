@@ -456,3 +456,115 @@ def getNpPart(chunkTag):
         return 'O'
     else:
         return chunkTag[0]
+
+
+#from Bikel et al. (1999)
+def CapPeriodOperator(form):
+	if re.match('[A-Z]\.$', form):
+		return [int(True)]
+	else:
+		return [int(False)]
+
+def isDigitOperator(form):
+    return [int(form.isdigit())]
+
+#from Zhou and Su (2002)
+def oneDigitNumOperator(form):
+    if len(form)==1 and isDigitOperator(form)==[1]:
+        return [1]
+    else:
+        return [0]
+
+#from Bikel et al. (1999)
+def twoDigitNumOperator(form):
+    if len(form)==2 and isDigitOperator(form)==[1]:
+        return [1]
+    else:
+        return [0]
+    return [int( form[0].isdigit() )]
+def fourDigitNumOperator(form):
+    if len(form)==4 and isDigitOperator(form)==[1]:
+        return [1]
+    else:
+        return [0]
+
+def isPunctuationOperator(form) :
+    for c in form :
+        if not c in [ ',','.','!','"',"'",'(',')',':','?','<','>','[',']',';','{','}' ] :
+            return [int(False)]
+    return [int(True)]
+
+
+
+#from Bikel et al. (1999)
+def containsDigitAndDashOperator(form):
+	if re.match('[0-9]+-[0-9]+', form):
+		return [int(True)]
+	else:
+		return [int(False)]    
+
+#from Bikel et al. (1999)
+def containsDigitAndSlashOperator(form):
+	if re.match('[0-9]+/[0-9]+', form):
+                return [int(True)]
+        else:
+                return [int(False)]
+
+#from Bikel et al. (1999)
+def containsDigitAndCommaOperator(form):
+	if re.match('[0-9]+[,.][0-9]+', form):
+                return [int(True)]
+        else:
+                return [int(False)]
+
+#from Zhou and Su (2002)
+def YearDecadeOperator(form):
+	if re.match('[0-9][0-9]s$', form) or re.match('[0-9][0-9][0-9][0-9]s$', form):
+		return [int(True)]
+	else:
+		return [int(False)]
+def newSentenceStart(sen, fields):
+	featVec = []
+	for tok in sen:
+		if tok is sen[0]:
+			featVec.append([1])
+		else:
+			featVec.append([0])	
+	return featVec
+
+def newSentenceEnd(sen, fields):
+	featVec = []
+        for tok in sen:
+                if tok is sen[-1]:
+                        featVec.append([1])
+                else:
+                        featVec.append([0])
+        return featVec
+def OOV(lemma):
+	if 'OOV' in lemma:
+		return [1]
+	else:
+		return [0]
+
+def getKrLemma(lemma):
+	return [lemma.split('/')[0]]
+
+def getPennTags(tag):
+  if re.match('^N', tag) or re.match('^PRP', tag):
+    return ['noun']
+  elif tag == 'IN' or tag == 'TO' or tag == 'RP':
+    return ['prep']
+  elif re.match('DT$', tag):
+    return ['det']
+  elif re.match('^VB', tag) or tag == 'MD':
+    return ['verb']
+  else:
+    return ['0']
+
+def plural(tag):
+  return [int( tag == 'NNS' or tag == 'NNPS' )]
+
+def getBNCtag(tag):
+  return [tag]
+
+
