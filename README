@@ -9,7 +9,7 @@ http://homepages.inf.ed.ac.uk/lzhang10/maxent_toolkit.html
 Based on training data, Huntag can perform any kind of sequential sentence
 tagging and has been used for NP chunking and Named Entity Recognition.
 
-DATA FORMAT
+=== DATA FORMAT ===
 
 Input data must be a tab-separated file with one word per line and an empty
 line to mark sentence boundaries. Each line must contain the same number of
@@ -22,7 +22,7 @@ of multi-word phrases (E-NP). The first two characters of answer tags
 should always conform to one of these two conventions, the rest may be any
 string describing the category. 
 
-FEATURES
+=== FEATURES ===
 
 The flexibility of Huntag comes from the fact that it will generate any kind
 of features from the input data given the appropriate python functions.
@@ -33,3 +33,54 @@ any number of her own.
 Once the desired features are implemented, a data set and a configuration
 file containing the list of feature functions to be used are all Huntag
 needs to perform training and tagging.
+
+=== USAGE ===
+HunTag may be run in any of the following three modes:
+
+MAXENT-TRAIN
+used to train a Maximum Entropy model given a training corpus and a set of feature functions
+
+cat TRAINING_DATA | python huntag.py maxent-train OPTIONS
+
+Mandatory options:
+    -c FILE, --config-file=FILE
+        read feature configuration from FILE
+    -m FILE, --maxent-model=FILE
+        name of maxent model file to be written
+    -i N, --iterations=N
+        train with a maximum of N iterations
+    -g N, --gauss=N
+        train using a Gaussian penalty of N
+
+Non-mandatory options:    
+    -f FILE, --feature-file=FILE
+        write training events to FILE
+
+
+BIGRAM-TRAIN
+Used to train a bigram language model using a given field of the training data
+
+cat TRAINING_DATA | python huntag.py bigram-train OPTIONS
+
+Mandatory options:
+    -b FILE, --bigram-model=FILE
+        name of bigram model file to be written
+    -t FIELD, --tag-field=FIELD
+        specify FIELD containing the tags to build bigram
+
+TAG
+Used to tag input. Given a maxent model providing the value P(t|w) for all tags t and words (set of feature values) w, and a bigram language model supplying P(t|t0) for all pairs of tags, HunTag will assign to each sentence the most likely tag sequence.
+
+cat INPUT | python huntag.py tag OPTIONS
+
+Mandatory options:
+    -m FILE, --maxent-model=FILE
+        name of maxent model file
+    -b FILE, --bigram-model=FILE
+        name of bigram model file
+    -c FILE, --config-file=FILE
+        read feature configuration from FILE
+
+Non-mandatory options:
+    -l L, --language-model-weight=L
+        set relative weight of the language model to L (default is 0.5)
