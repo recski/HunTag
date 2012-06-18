@@ -1,0 +1,12 @@
+BUX
+GDP
+EBITDA
+EPS
+Libor
+ERM
+DAX
+Brent
+FTSE
+FTSE-100
+DAX
+Nasdaq Composite
