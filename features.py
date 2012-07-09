@@ -549,6 +549,15 @@ def OOV(lemma):
 def getKrLemma(lemma):
 	return [lemma.split('/')[0]]
 
+def getKrPos(kr):
+	if '<' in kr:
+		pieces=kr.split('<')
+		pos=pieces[0]
+	else:
+		pos=kr
+	return [pos]
+ 
+
 def getPennTags(tag):
   if re.match('^N', tag) or re.match('^PRP', tag):
     return ['noun']

@@ -73,7 +73,10 @@ def getFeatureSet(cfgFile):
         
         type, name, actionName = feature[:3]
         fields = [ int(field) for field in feature[3].split(',') ]
-        radius = defaultRadius
+        if len(feature)>4:
+            radius = int(feature[4])
+        else:
+            radius = defaultRadius
         cutoff = defaultCutoff
         options = optsByFeature[name]
         feat = Feature( type, name, actionName, fields, radius, cutoff, options )

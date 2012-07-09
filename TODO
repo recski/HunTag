@@ -1,0 +1,3 @@
+unicode
+support for features with external resources (other than lexicon features - might not need those once this is done)
+non-verbose mode
