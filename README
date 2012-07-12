@@ -34,6 +34,33 @@ Once the desired features are implemented, a data set and a configuration
 file containing the list of feature functions to be used are all Huntag
 needs to perform training and tagging.
 
+=== CONFIG FILE ===
+The configuration file lists the features that are to be used for a given task. The feature file may start with a command specifying the default radius for features. This is non-mandatory. Example:
+!defaultRadius 5
+
+Next, it can give values to variables that shall be used by the featurizing methods.
+For example, the following three lines set the parameters of the feature called krpatt
+
+let krpatt minLength 2
+let krpatt maxLength 99
+let krpatt lang hu
+
+The second field specifies the name of the feature, the third a key, the fourth a numeric value. The dictionary of key-value pairs will be passed to the feature.
+
+After this come the actual assignments of feture names to features. Examples:
+
+token ngr ngrams 0
+sentence bwsamecases isBetweenSameCases 1
+lex street hunner/lex/streetname.lex 0
+token lemmalowered lemmaLowered 0,2
+
+The first keyword can have three values, token, lex and sentence. For example, in the first example line above, the feature name ngr will be assigned to the python function ngrams() that returns a feature string for the given token. The third argument is a column or comma-separated list of columns. It specifies which fields of the input should be passed to the feature function. Counting starts from zero.
+
+For sentence features, the input is aggregated sentence-wise into a list, and this list is then passed to the feature function. This function should return a list consisting of one feature string for each of the tokens of the sentence.
+
+For lex features, the second argument specifies a lexicon file rather than a python function name. The specified token field is matched against this lexicon file.
+
+
 === USAGE ===
 HunTag may be run in any of the following three modes:
 
