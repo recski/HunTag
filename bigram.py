@@ -11,7 +11,7 @@ class Bigram:
         self.smooth = smooth
         self.logSmooth=math.log(self.smooth)
         self.updatewarning = 'WARNING: Probabilities have not been \
-	                     recalculated since last input!'
+	                          recalculated since last input!'
         self.tags = set()
         
     def reset(self):
@@ -39,39 +39,40 @@ class Bigram:
         self.tags = set()
         self.bigramLogProb = {}
         self.unigramLogProb = {}
-	self.logSmooth = math.log(self.smooth)
-	for pair, count in self.bigramCount.items():
+	    self.logSmooth = math.log(self.smooth)
+    	for pair, count in self.bigramCount.items():
             unigramCount = self.unigramCount[pair[0]]
             prob = count/unigramCount
             logProb = math.log(prob)
             #print pair, count, unigramCount, prob, logProb
             self.bigramLogProb[pair] = logProb
 	
-	for tag, count in self.unigramCount.items():
-	    #if tag != self.boundarySymbol:
-	    self.tags.add(tag)
+	    for tag, count in self.unigramCount.items():
+	        #if tag != self.boundarySymbol:
+	        self.tags.add(tag)
             self.unigramLogProb[tag] = math.log(count/
                                        self.obsCount)
 	
-	self.updated=True
+    	self.updated=True
 	
 		
     def logProb(self, egy, ketto):
-	if not self.updated:
+	    if not self.updated:
             logging.warning(self.updatewarning)
 
-	try:
-	    return self.bigramLogProb[(egy,ketto)]
-	except KeyError:
-	    return self.logSmooth
+	    try:
+	        return self.bigramLogProb[(egy,ketto)]
+	    except KeyError:
+	        return self.logSmooth
   
     def prob(self, egy, ketto):
-	return math.exp(self.logProb(egy,ketto)) 
+	    return math.exp(self.logProb(egy,ketto)) 
   
     def writeToFile(self, fileName):
         f = open(fileName, 'w')
         f.write(str(self.smooth)+'\n')
-        tagProbs = [tag+':'+str(self.unigramLogProb[tag]) for tag in self.tags if tag!=self.boundarySymbol]
+        tagProbs = [tag+':'+str(self.unigramLogProb[tag])
+                    for tag in self.tags if tag!=self.boundarySymbol]
         f.write(' '.join(tagProbs)+'\n')
         for t1 in self.tags:
             for t2 in self.tags:
@@ -89,9 +90,9 @@ class Bigram:
             model.tags.add(tag)
             model.unigramLogProb[tag] = float(prob)
         for line in modelFile:
-          l = line.split()
-          t1, t2, logProb = l[0],l[1],float(l[2])
-          model.bigramLogProb[(t1,t2)] = logProb
+            l = line.split()
+            t1, t2, logProb = l[0],l[1],float(l[2])
+            model.bigramLogProb[(t1,t2)] = logProb
         return model
         
   
