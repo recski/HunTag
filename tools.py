@@ -28,3 +28,34 @@ def featurizeSentence(sen, features):
         for c, feats in enumerate(feature.evalSentence(sen)):
             sentenceFeats[c]+=feats
     return sentenceFeats
+
+class BookKeeper():
+    def __init__(self):
+        self.featToNo = {}
+        self.noToFeat = {}
+        self.next = 1
+
+    def getNo(self, feat):
+        if not self.featToNo.has_key(feat):
+            self.featToNo[feat] = self.next
+            self.noToFeat[self.next] = feat
+            self.next+=1
+        return self.featToNo[feat]
+
+    def saveToFile(self, fileName='featureNumbers.txt'):
+        f = open(fileName, 'w')
+        for feat, no in self.featToNo.iteritems():
+            f.write(feat+'\t'+str(no)+'\n')
+        f.close()
+        return True
+
+    def readFromFile(self, fileName='featureNumbers.txt'):
+        self.featToNo = {}
+        self.noToFeat = {}
+        for line in file(fileName):
+            l = line.strip().split()
+            feat, no = l[0], int(l[1])
+            self.featToNo[feat] = no
+            self.noToFeat[no] = feat
+            self.next = no+1
+        return True

@@ -1,37 +1,47 @@
 #trainer.py is a module of HunTag and is used to train maxent models
 from tools import *
-import maxent
-maxent.set_verbose(1)
-
+from liblinear.python.liblinearutil import *
 import sys
 
 class Trainer():
-    def __init__(self, features, outFeatFile=None):
+    def __init__(self, features, options):
+        self.modelName = options.modelName        
+        self.parameters = parameter(options.trainParams)
         self.features = features
-        self.model = maxent.MaxentModel()
+        self.labels = []
+        self.contexts = []
+        self.labelCounter = BookKeeper()
+        self.featCounter = BookKeeper()
         self.writeFeats = False
-        if outFeatFile:
+        if options.outFeatFile:
             self.writeFeats = True
             self.outFeatFile = open(outFeatFile, 'w')
-    def addEvents(self, data):
+    
+    def save(self):
+        save_model(self.modelName+'.model', self.model)
+        self.labelCounter.saveToFile(self.modelName+'.labelNumbers')
+        self.featCounter.saveToFile(self.modelName+'.featureNumbers')
+
+    def getEvents(self, data):
         sys.stderr.write('featurizing sentences...')
-        self.model.begin_add_event()
         senCount = 0
         for sen in sentenceIterator(data):
             senCount+=1
             sentenceFeats = featurizeSentence(sen, self.features)
             for c, tok in enumerate(sen):
-                context = sentenceFeats[c]
-                outcome = tok[-1]
-                self.model.add_event(context, outcome)
+                tokFeats = sentenceFeats[c]
+                featNumbers = [self.featCounter.getNo(feat) for feat in tokFeats]
+                context = dict([(featNo, 1) for featNo in featNumbers])
+                label = self.labelCounter.getNo(tok[-1])
+                self.contexts.append(context)
+                self.labels.append(label)
                 if self.writeFeats:
-                    self.outFeatFile.write(outcome+'\t'+' '.join(context)+'\n')
+                    self.outFeatFile.write(tok[-1]+'\t'+' '.join(tokFeats)+'\n')
             if senCount % 1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
             
-        self.model.end_add_event()
         sys.stderr.write(str(senCount)+'...done!\n')
         
-    def train(self, iter, gauss, modelFileName):
-        self.model.train(iter, 'lbfgs', gauss)
-        self.model.save(modelFileName)
+    def train(self):
+        prob = problem(self.labels, self.contexts)
+        self.model = train(prob, self.parameters)

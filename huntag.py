@@ -4,52 +4,32 @@ from optparse import OptionParser
 import maxent
 maxent.set_verbose(1)
 
-from viterbi import viterbi
-
 from feature import Feature
 from trainer import Trainer
+from tagger import Tagger
 from bigram import Bigram
 from tools import *
 
 import math
 import sys
 
-def main_maxentTrain(modelFile, featureSet, options, input=sys.stdin):
-    trainer = Trainer(featureSet, options.outFeatFile)
-    trainer.addEvents(input)
-    trainer.train(options.iter, options.gauss, modelFile)
+def main_train(featureSet, options, input=sys.stdin):
+    trainer = Trainer(featureSet, options)
+    trainer.getEvents(input)
+    trainer.train()
+    trainer.save()
 
-def main_bigramTrain(modelFile, tagField, input=sys.stdin):
+def main_bigramTrain(options, input):
     bigramModel = Bigram(0.00000001)
     for sen in sentenceIterator(input):
-        tags = [tok[tagField] for tok in sen]
+        tags = [tok[options.tagField] for tok in sen]
         bigramModel.obsSequence(tags)
     bigramModel.count()
-    bigramModel.writeToFile(modelFile)
+    bigramModel.writeToFile(options.bigramModelFile)
         
-def main_tag(maxentModelFile, bigramModelFile, featureSet, options, input=sys.stdin):
-    lmw = options.lmw
-    if lmw < 0 or lmw >=1:
-        sys.stderr.write('ERROR: language model weight must be non-negative and less than 1\n')
-        sys.exit(-1)
-    sys.stderr.write('loading transition model...')
-    transProbs = Bigram.getModelFromFile(bigramModelFile)
-    sys.stderr.write('done\nloading maxent model...')
-    maxentModel = maxent.MaxentModel()
-    maxentModel.load(maxentModelFile)
-    senCount = 0
-    sys.stderr.write('done\ntagging...')
-    for sen in sentenceIterator(input):
-        senCount += 1
-        senFeats = featurizeSentence(sen, featureSet)
-        tagProbsByPos = [dict(maxentModel.eval_all(feats)) for feats in senFeats]
-        logTagProbsByPos = [dict([(tag, math.log(prob)) for tag, prob in d.items()]) for d in tagProbsByPos]
-        _, bestTagging = viterbi(transProbs, logTagProbsByPos, lmw)
-        taggedSen = addTagging(sen, bestTagging)
-        if senCount%1000 == 0:
-            sys.stderr.write(str(senCount)+'...')
-        writeSentence(taggedSen)
-    sys.stderr.write(str(senCount)+'...done\n')
+def main_tag(featureSet, options, input):
+    tagger = Tagger(featureSet, options)
+    tagger.tag(input)    
 
 def getFeatureSet(cfgFile):
     features = {}
@@ -79,7 +59,7 @@ def getFeatureSet(cfgFile):
             radius = defaultRadius
         cutoff = defaultCutoff
         options = optsByFeature[name]
-        feat = Feature( type, name, actionName, fields, radius, cutoff, options )
+        feat = Feature(type,name, actionName, fields, radius, cutoff, options )
         features[name]=feat
     
     return features    
@@ -89,22 +69,20 @@ def getParser():
     parser.add_option('-c', '--config-file', dest='cfgFile',
                       help='read feature configuration from FILE',
                       metavar='FILE')
-    parser.add_option('-m', '--maxent-model', dest='maxentModelFile',
-                      help='name of maxent model file to be read/written',
-                      metavar='FILE')
+    parser.add_option('-m', '--model', dest='modelName',
+                      help='name of model to be read/written',
+                      metavar='NAME')
     parser.add_option('-b', '--bigram-model', dest='bigramModelFile',
                       help='name of bigram model file to be read/written',
                       metavar='FILE')
-    parser.add_option('-i', '--iterations', dest='iter', type='int',
-                      help='train with a maximum of N iterations', metavar='N')
-                                       
-    parser.add_option('-g', '--gauss', dest='gauss', type='int', default=0,
-                      help='train using a Gaussian penalty of N', metavar='N')
-                                       
+                                      
     parser.add_option('-l', '--language-model-weight', dest='lmw',
-		              type='float', default=0.5,
+		              type='float', default=1,
 		              help='set relative weight of the language model to L',
                       metavar='L')
+ 
+    parser.add_option('-p', '--parameters', dest='trainParams',
+                      help='pass PARAMS to trainer', metavar='PARAMS')
                                         
     parser.add_option('-f', '--feature-file', dest='outFeatFile',
                       help='write training events to FILE', metavar='FILE')
@@ -119,14 +97,13 @@ def main():
     options, args = parser.parse_args()
     task = args[0]
     if task == 'bigram-train':
-        main_bigramTrain(options.bigramModelFile, options.tagField)
+        main_bigramTrain(options, sys.stdin)
     else:
         featureSet = getFeatureSet(options.cfgFile)
-        if task == 'maxent-train':
-            main_maxentTrain(options.maxentModelFile, featureSet, options)
+        if task == 'train':
+            main_train(featureSet, options)
         elif task == 'tag':
-            main_tag(options.maxentModelFile, options.bigramModelFile,
-                             featureSet, options)
+            main_tag(featureSet, options, sys.stdin)
         else:
             sys.stderr.write("""invalid task: %s\nRun huntag.py --help
 			                    for more information\n""" % task)

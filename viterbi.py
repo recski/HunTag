@@ -24,16 +24,16 @@ def viterbi(transProbs, tagProbsByPos, languageModelWeight, boundarySymbol='S'):
  
         for y in states:
             if t == len(tagProbsByPos):
-                (prob, state) = max([(languageModelWeight/2)*transProbs.logProb(y, boundarySymbol) + \
+                (prob, state) = max([languageModelWeight*transProbs.logProb(y, boundarySymbol) + \
                                 (V[t-1][y0] + \
-                                (languageModelWeight/2)*transProbs.logProb(y0,y) + \
-                                (1-languageModelWeight)*tagProbsByPos[t][y] - \
+                                languageModelWeight*transProbs.logProb(y0,y) + \
+                                tagProbsByPos[t][y] - \
                                 transProbs.unigramLogProb[y], #dividing by a priori probability so as not to count it twice
                                 y0) for y0 in states])
             else:
                 (prob, state) = max([(V[t-1][y0] + \
                                 languageModelWeight*transProbs.logProb(y0,y) + \
-                                (1-languageModelWeight)*tagProbsByPos[t][y] - \
+                                tagProbsByPos[t][y] - \
                                 languageModelWeight*transProbs.unigramLogProb[y], #dividing by a priori probability so as not to count it twice
                                 y0) for y0 in states])
             V[t][y] = prob
