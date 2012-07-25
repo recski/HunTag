@@ -1,10 +1,11 @@
-Huntag - a sequential tagger for NLP using Maximum Entropy Learning and
-Hidden Markov Models
+Huntag - a sequential tagger for NLP combining the linear classificator Liblinear and Hidden Markov Models
 
-Requirements: In order for Huntag to work, the Maximum Entropy toolkit must
-be installed with Python bindings. It can be obtained from:
+Requirements:
+The Liblinear package can be downloaded from:
 
-http://homepages.inf.ed.ac.uk/lzhang10/maxent_toolkit.html
+http://www.csie.ntu.edu.tw/~cjlin/liblinear/
+
+For the time being the Liblinear package must be compiled manually and placed in the HunTag directory. Liblinear must be in HunTag/liblinear, the python bindings in HunTag/liblinear/python.
 
 Based on training data, Huntag can perform any kind of sequential sentence
 tagging and has been used for NP chunking and Named Entity Recognition.
@@ -64,20 +65,18 @@ For lex features, the second argument specifies a lexicon file rather than a pyt
 === USAGE ===
 HunTag may be run in any of the following three modes:
 
-MAXENT-TRAIN
-used to train a Maximum Entropy model given a training corpus and a set of feature functions
+TRAIN
+used to train a Liblinear model given a training corpus and a set of feature functions. When run in TRAIN mode, HunTag creates three files, one containing the liblinear mode and two listing features and labels and the integers they are mapped to when passed to liblinear. With the --model option set to NAME, the three files will be stored under NAME.model, NAME.featureNumbers and NAME.labelNumbers respectively.
 
-cat TRAINING_DATA | python huntag.py maxent-train OPTIONS
+cat TRAINING_DATA | python huntag.py train OPTIONS
 
 Mandatory options:
     -c FILE, --config-file=FILE
         read feature configuration from FILE
-    -m FILE, --maxent-model=FILE
-        name of maxent model file to be written
-    -i N, --iterations=N
-        train with a maximum of N iterations
-    -g N, --gauss=N
-        train using a Gaussian penalty of N
+    -m NAME, --model=NAME
+        name of liblinear model and lists
+    -p PARAMS --parameters=PARAMS
+        pass PARAMS to liblinear trainer
 
 Non-mandatory options:    
     -f FILE, --feature-file=FILE
@@ -101,8 +100,8 @@ Used to tag input. Given a maxent model providing the value P(t|w) for all tags 
 cat INPUT | python huntag.py tag OPTIONS
 
 Mandatory options:
-    -m FILE, --maxent-model=FILE
-        name of maxent model file
+    -m NAME, --model=NAME
+        name of liblinear model file and lists
     -b FILE, --bigram-model=FILE
         name of bigram model file
     -c FILE, --config-file=FILE
@@ -110,4 +109,4 @@ Mandatory options:
 
 Non-mandatory options:
     -l L, --language-model-weight=L
-        set relative weight of the language model to L (default is 0.5)
+        set weight of the language model to L (default is 1)

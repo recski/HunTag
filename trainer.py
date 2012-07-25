@@ -6,7 +6,7 @@ import sys
 class Trainer():
     def __init__(self, features, options):
         self.modelName = options.modelName        
-        self.parameters = parameter(options.trainParams)
+        self.parameters = options.trainParams
         self.features = features
         self.labels = []
         self.contexts = []
@@ -18,9 +18,12 @@ class Trainer():
             self.outFeatFile = open(outFeatFile, 'w')
     
     def save(self):
+        sys.stderr.write('saving model...')
         save_model(self.modelName+'.model', self.model)
+        sys.stderr.write('done\nsaving label and feature lists...')
         self.labelCounter.saveToFile(self.modelName+'.labelNumbers')
         self.featCounter.saveToFile(self.modelName+'.featureNumbers')
+        sys.stderr.write('done\n')
 
     def getEvents(self, data):
         sys.stderr.write('featurizing sentences...')
@@ -43,5 +46,8 @@ class Trainer():
         sys.stderr.write(str(senCount)+'...done!\n')
         
     def train(self):
+        sys.stderr.write('creating training problem...')
         prob = problem(self.labels, self.contexts)
-        self.model = train(prob, self.parameters)
+        sys.stderr.write('done\ntraining with option(s) "'+self.parameters+'"...')
+        self.model = train(prob, parameter(self.parameters))
+        sys.stderr.write('done\n')
