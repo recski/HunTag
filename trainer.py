@@ -15,7 +15,7 @@ class Trainer():
         self.writeFeats = False
         if options.outFeatFile:
             self.writeFeats = True
-            self.outFeatFile = open(outFeatFile, 'w')
+            self.outFeatFile = open(options.outFeatFile, 'w')
     
     def save(self):
         sys.stderr.write('saving model...')
