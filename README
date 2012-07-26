@@ -1,14 +1,13 @@
 Huntag - a sequential tagger for NLP combining the linear classificator Liblinear and Hidden Markov Models
+Based on training data, Huntag can perform any kind of sequential sentence
+tagging and has been used for NP chunking and Named Entity Recognition.
 
-Requirements:
-The Liblinear package can be downloaded from:
+=== REQUIREMENTS ===
+HunTag uses the Liblinear package, which can be downloaded from:
 
 http://www.csie.ntu.edu.tw/~cjlin/liblinear/
 
-For the time being the Liblinear package must be compiled manually and placed in the HunTag directory. Liblinear must be in HunTag/liblinear, the python bindings in HunTag/liblinear/python.
-
-Based on training data, Huntag can perform any kind of sequential sentence
-tagging and has been used for NP chunking and Named Entity Recognition.
+In order for HunTag to work, Liblinear should be compiled with python bindings and the directory containing the python files `liblinearutil.py' and `liblinear.py' should be added to the environment variable PYTHONPATH.
 
 === DATA FORMAT ===
 

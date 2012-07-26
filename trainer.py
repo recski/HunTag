@@ -1,6 +1,6 @@
 #trainer.py is a module of HunTag and is used to train maxent models
 from tools import *
-from liblinear.python.liblinearutil import *
+from liblinearutil import *
 import sys
 
 class Trainer():

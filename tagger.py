@@ -1,6 +1,6 @@
 from viterbi import viterbi
 from bigram import Bigram
-from liblinear.python.liblinearutil import *
+from liblinearutil import *
 from tools import *
 import math
 import sys

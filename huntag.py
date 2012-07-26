@@ -1,9 +1,6 @@
 from collections import defaultdict
 from optparse import OptionParser
 
-import maxent
-maxent.set_verbose(1)
-
 from feature import Feature
 from trainer import Trainer
 from tagger import Tagger
