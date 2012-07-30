@@ -13,9 +13,13 @@ class Trainer():
         self.labelCounter = BookKeeper()
         self.featCounter = BookKeeper()
         self.writeFeats = False
+        self.usedFeats = None
         if options.outFeatFile:
             self.writeFeats = True
             self.outFeatFile = open(options.outFeatFile, 'w')
+        if options.usedFeats:
+            self.usedFeats = set([line.strip()
+                                 for line in file(options.usedFeats) ])
     
     def save(self):
         sys.stderr.write('saving model...')
@@ -33,7 +37,11 @@ class Trainer():
             sentenceFeats = featurizeSentence(sen, self.features)
             for c, tok in enumerate(sen):
                 tokFeats = sentenceFeats[c]
-                featNumbers = [self.featCounter.getNo(feat) for feat in tokFeats]
+                if self.usedFeats:
+                    tokFeats = [feat for feat in tokFeats
+                                if feat in self.usedFeats]
+                featNumbers = [self.featCounter.getNo(feat)
+                               for feat in tokFeats]
                 context = dict([(featNo, 1) for featNo in featNumbers])
                 label = self.labelCounter.getNo(tok[-1])
                 self.contexts.append(context)

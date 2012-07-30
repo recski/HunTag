@@ -17,7 +17,7 @@ def main_train(featureSet, options, input=sys.stdin):
     trainer.save()
 
 def main_bigramTrain(options, input):
-    bigramModel = Bigram(0.00000001)
+    bigramModel = Bigram(0.000000000000001)
     for sen in sentenceIterator(input):
         tags = [tok[options.tagField] for tok in sen]
         bigramModel.obsSequence(tags)
@@ -81,6 +81,10 @@ def getParser():
     parser.add_option('-p', '--parameters', dest='trainParams',
                       help='pass PARAMS to trainer', metavar='PARAMS')
                                         
+    parser.add_option('-u', '--used-feats', dest='usedFeats',
+                      help='limit used features to those in FILE',
+                      metavar='FILE')
+    
     parser.add_option('-f', '--feature-file', dest='outFeatFile',
                       help='write training events to FILE', metavar='FILE')
                                         

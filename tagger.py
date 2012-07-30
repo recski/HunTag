@@ -17,19 +17,27 @@ class Tagger():
         self.labelCounter, self.featCounter = BookKeeper(), BookKeeper()
         self.labelCounter.readFromFile(options.modelName+'.labelNumbers')
         self.featCounter.readFromFile(options.modelName+'.featureNumbers')
+        self.usedFeats = None
+        if options.usedFeats:
+            self.usedFeats = set([line.strip()
+                                  for line in file(options.usedFeats)])
         sys.stderr.write('done\n')
 
 
     def getLogTagProbsByPos(self, senFeats):
-        numberedSenFeats = [ [self.featCounter.getNo(feat)
-                              for feat in feats]
-                              for feats in senFeats]
+        if self.usedFeats:
+            numberedSenFeats = [ [self.featCounter.getNo(feat)
+                                 for feat in feats if feat in self.usedFeats]
+                                 for feats in senFeats]
+        else:
+            numberedSenFeats = [ [self.featCounter.getNo(feat)
+                                 for feat in feats]
+                                 for feats in senFeats]
         contexts = [dict([(feat, 1) for feat in feats])
                            for feats in numberedSenFeats]
         dummyOutcomes = [1 for c in contexts]
         _, __, probDistsByPos = predict(dummyOutcomes, contexts,
                                         self.model, self.params)
-        
 
         """
         logTagProbsByPos = [ dict([(self.featCounter.noToFeat[i+1],
