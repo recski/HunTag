@@ -60,8 +60,10 @@ class Feature():
         elif self.kind=="sentence" :
             featVec = self.evalSentence_Sentence(sentence)
 
-        multipliedFeatVec = []
+        return self.multiplyFeatures(sentence, featVec)
 
+    def multiplyFeatures(self, sentence, featVec):
+        multipliedFeatVec = []
         for c,word in enumerate(sentence):
             multipliedFeatVec.append([])
             for i in range (-self.radius, self.radius+1):

@@ -24,15 +24,18 @@ class Tagger():
         sys.stderr.write('done\n')
 
 
-    def getLogTagProbsByPos(self, senFeats):
+    def getNumberedSenFeats(self, senFeats):
         if self.usedFeats:
-            numberedSenFeats = [ [self.featCounter.getNo(feat)
-                                 for feat in feats if feat in self.usedFeats]
-                                 for feats in senFeats]
+            return [ [self.featCounter.getNo(feat)
+                      for feat in feats if feat in self.usedFeats]
+                      for feats in senFeats]
         else:
-            numberedSenFeats = [ [self.featCounter.getNo(feat)
-                                 for feat in feats]
-                                 for feats in senFeats]
+            return [ [self.featCounter.getNo(feat)
+                      for feat in feats]
+                      for feats in senFeats]
+        
+    def getLogTagProbsByPos(self, senFeats):
+        numberedSenFeats = self.getNumberedSenFeats(senFeats)
         contexts = [dict([(feat, 1) for feat in feats])
                            for feats in numberedSenFeats]
         dummyOutcomes = [1 for c in contexts]
