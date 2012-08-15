@@ -13,6 +13,9 @@ import sys
 def main_train(featureSet, options, input=sys.stdin):
     trainer = Trainer(featureSet, options)
     trainer.getEvents(input)
+    trainer.cutoffFeats()
+    if options.outFeatFile:
+        trainer.writeFeats(options.outFeatFile)
     trainer.train()
     trainer.save()
 
@@ -66,28 +69,33 @@ def getParser():
     parser.add_option('-c', '--config-file', dest='cfgFile',
                       help='read feature configuration from FILE',
                       metavar='FILE')
+
     parser.add_option('-m', '--model', dest='modelName',
                       help='name of model to be read/written',
                       metavar='NAME')
+
     parser.add_option('-b', '--bigram-model', dest='bigramModelFile',
                       help='name of bigram model file to be read/written',
-                      metavar='FILE')
-                                      
+                      metavar='FILE')                              
+
     parser.add_option('-l', '--language-model-weight', dest='lmw',
 		              type='float', default=1,
 		              help='set relative weight of the language model to L',
                       metavar='L')
- 
+
+    parser.add_option('-o', '--cutoff', dest='cutoff', type='int', default=1,
+		              help='set global cutoff to C', metavar='C') 
+
     parser.add_option('-p', '--parameters', dest='trainParams',
                       help='pass PARAMS to trainer', metavar='PARAMS')
-                                        
+
     parser.add_option('-u', '--used-feats', dest='usedFeats',
                       help='limit used features to those in FILE',
                       metavar='FILE')
-    
+
     parser.add_option('-f', '--feature-file', dest='outFeatFile',
                       help='write training events to FILE', metavar='FILE')
-                                        
+                                       
     parser.add_option('-t', '--tag-field', dest='tagField', type='int',
                       help="""specify FIELD containing the tags to build bigram
 		              model from""", metavar='FIELD')

@@ -7,16 +7,13 @@ class Trainer():
     def __init__(self, features, options):
         self.modelName = options.modelName        
         self.parameters = options.trainParams
+        self.cutoff = options.cutoff
         self.features = features
         self.labels = []
         self.contexts = []
         self.labelCounter = BookKeeper()
         self.featCounter = BookKeeper()
-        self.writeFeats = False
         self.usedFeats = None
-        if options.outFeatFile:
-            self.writeFeats = True
-            self.outFeatFile = open(options.outFeatFile, 'w')
         if options.usedFeats:
             self.usedFeats = set([line.strip()
                                  for line in file(options.usedFeats) ])
@@ -29,6 +26,30 @@ class Trainer():
         self.featCounter.saveToFile(self.modelName+'.featureNumbers')
         sys.stderr.write('done\n')
 
+    def writeFeats(self, fileName):
+        featFile = open(fileName, 'w')
+        for i, context in enumerate(self.contexts):
+            label = self.labelCounter.noToFeat[self.labels[i]]
+            feats = [self.featCounter.noToFeat[c] for c in context.keys()]
+            featFile.write('{0}\t{1}\n'.format(label, ' '.join(feats)))
+    
+    def reduceContexts(self):
+        sys.stderr.write('reducing training events...')
+        self.contexts = [dict([(number, value)
+                              for number, value in context.iteritems()
+                              if self.featCounter.noToFeat.has_key(number)])
+                         for context in self.contexts]
+        sys.stderr.write('done!\n')
+
+    def cutoffFeats(self):
+        if self.cutoff<2:
+            return
+        sys.stderr.write('discarding features with\
+        less than {0} occurences...'.format(self.cutoff))      
+        self.featCounter.cutoff(self.cutoff)
+        sys.stderr.write('done!\n')
+        self.reduceContexts()
+            
     def getEvents(self, data):
         sys.stderr.write('featurizing sentences...')
         senCount = 0
@@ -46,8 +67,6 @@ class Trainer():
                 label = self.labelCounter.getNo(tok[-1])
                 self.contexts.append(context)
                 self.labels.append(label)
-                if self.writeFeats:
-                    self.outFeatFile.write(tok[-1]+'\t'+' '.join(tokFeats)+'\n')
             if senCount % 1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
             

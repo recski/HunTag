@@ -1,4 +1,5 @@
 #Miscellaneous tools for HunTag
+from collections import defaultdict
 def sentenceIterator(input):
     currSen = []
     for line in input:
@@ -31,11 +32,22 @@ def featurizeSentence(sen, features):
 
 class BookKeeper():
     def __init__(self):
+        self.featCounter = defaultdict(int)
         self.featToNo = {}
         self.noToFeat = {}
         self.next = 1
+    
+    def cutoff(self, cutoff):
+        self.featCounter = dict([(feat, count)
+                         for feat, count in self.featCounter.iteritems()
+                         if count>=cutoff])
+        keptPairs = [(feat, no) for feat, no in self.featToNo.iteritems()
+                     if self.featCounter.has_key(feat)]
+        self.featToNo = dict(keptPairs)
+        self.noToFeat = dict([(no, feat) for feat, no in keptPairs])        
 
     def getNo(self, feat):
+        self.featCounter[feat]+=1
         if not self.featToNo.has_key(feat):
             self.featToNo[feat] = self.next
             self.noToFeat[self.next] = feat
