@@ -4,18 +4,19 @@ from liblinearutil import *
 import sys
 
 class Trainer():
-    def __init__(self, features, options, usedFeats=None):
-        self.modelName = options.modelName        
-        self.parameters = options.trainParams
-        self.cutoff = options.cutoff
+    def __init__(self, features, options):
+        self.modelName = options['modelName']
+        self.parameters = options['trainParams']
+        self.cutoff = options['cutoff']
         self.features = features
         self.labels = []
         self.contexts = []
         self.labelCounter = BookKeeper()
         self.featCounter = BookKeeper()
         self.usedFeats = None
-        if usedFeats:
-            self.usedFeats = set([line.strip() for line in usedFeats])
+        if options['usedFeats']:
+            self.usedFeats = set([line.strip()
+                                  for line in options['usedFeats']])
     
     def save(self):
         sys.stderr.write('saving model...')

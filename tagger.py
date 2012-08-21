@@ -9,30 +9,22 @@ class Tagger():
     def __init__(self, featureSet, options):
         self.featureSet = featureSet
         self.params = '-b 1'
-        self.lmw = options.lmw
+        self.lmw = options['lmw']
+        modelName = options['modelName']
         sys.stderr.write('loading transition model...')
-        self.transProbs = Bigram.getModelFromFile(options.bigramModelFile)
+        self.transProbs = Bigram.getModelFromFile(options['bigramModelFile'])
         sys.stderr.write('done\nloading observation model...')
-        self.model = load_model(options.modelName+'.model')
+        self.model = load_model('{0}.model'.format(modelName))
         self.labelCounter, self.featCounter = BookKeeper(), BookKeeper()
-        self.labelCounter.readFromFile(options.modelName+'.labelNumbers')
-        self.featCounter.readFromFile(options.modelName+'.featureNumbers')
-        self.usedFeats = None
-        if options.usedFeats:
-            self.usedFeats = set([line.strip()
-                                  for line in file(options.usedFeats)])
+        self.labelCounter.readFromFile('{0}.labelNumbers'.format(modelName))
+        self.featCounter.readFromFile('{0}.featureNumbers'.format(modelName))
         sys.stderr.write('done\n')
 
 
     def getNumberedSenFeats(self, senFeats):
-        if self.usedFeats:
-            return [ [self.featCounter.getNo(feat)
-                      for feat in feats if feat in self.usedFeats]
-                      for feats in senFeats]
-        else:
-            return [ [self.featCounter.getNo(feat)
-                      for feat in feats]
-                      for feats in senFeats]
+        return [ [self.featCounter.getNo(feat)
+                 for feat in feats]
+               for feats in senFeats]
         
     def getLogTagProbsByPos(self, senFeats):
         numberedSenFeats = self.getNumberedSenFeats(senFeats)

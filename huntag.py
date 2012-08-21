@@ -11,10 +11,10 @@ import math
 import sys
 
 def main_train(featureSet, options, input=sys.stdin):
+    optionsDict = vars(options)
     if options.usedFeats:
-        trainer = Trainer(featureSet, options, file(options.usedFeats))
-    else:
-        trainer = Trainer(featureSet, options)
+        optionsDict['usedFeats'] = file(options.usedFeats)
+    trainer = Trainer(featureSet, optionsDict)
     trainer.getEvents(input)
     trainer.cutoffFeats()
     if options.outFeatFile:
@@ -31,7 +31,8 @@ def main_bigramTrain(options, input):
     bigramModel.writeToFile(options.bigramModelFile)
         
 def main_tag(featureSet, options, input):
-    tagger = Tagger(featureSet, options)
+    optionsDict = vars(options)
+    tagger = Tagger(featureSet, optionsDict)
     tagger.tag(input)    
 
 def getFeatureSet(cfgFile):
