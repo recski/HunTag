@@ -4,7 +4,7 @@ from liblinearutil import *
 import sys
 
 class Trainer():
-    def __init__(self, features, options):
+    def __init__(self, features, options, usedFeats=None):
         self.modelName = options.modelName        
         self.parameters = options.trainParams
         self.cutoff = options.cutoff
@@ -14,9 +14,8 @@ class Trainer():
         self.labelCounter = BookKeeper()
         self.featCounter = BookKeeper()
         self.usedFeats = None
-        if options.usedFeats:
-            self.usedFeats = set([line.strip()
-                                 for line in file(options.usedFeats) ])
+        if usedFeats:
+            self.usedFeats = set([line.strip() for line in usedFeats])
     
     def save(self):
         sys.stderr.write('saving model...')

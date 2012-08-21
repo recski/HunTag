@@ -11,7 +11,10 @@ import math
 import sys
 
 def main_train(featureSet, options, input=sys.stdin):
-    trainer = Trainer(featureSet, options)
+    if options.usedFeats:
+        trainer = Trainer(featureSet, options, file(options.usedFeats))
+    else:
+        trainer = Trainer(featureSet, options)
     trainer.getEvents(input)
     trainer.cutoffFeats()
     if options.outFeatFile:
