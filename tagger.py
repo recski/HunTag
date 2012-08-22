@@ -15,9 +15,8 @@ class Tagger():
         self.transProbs = Bigram.getModelFromFile(options['bigramModelFile'])
         sys.stderr.write('done\nloading observation model...')
         self.model = load_model('{0}.model'.format(modelName))
-        self.labelCounter, self.featCounter = BookKeeper(), BookKeeper()
-        self.labelCounter.readFromFile('{0}.labelNumbers'.format(modelName))
-        self.featCounter.readFromFile('{0}.featureNumbers'.format(modelName))
+        self.labelCounter = options['labelCounter']
+        self.featCounter = options['featCounter']
         sys.stderr.write('done\n')
 
 
@@ -62,5 +61,5 @@ class Tagger():
             taggedSen = addTagging(sen, bestTagging)
             if senCount%1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
-            writeSentence(taggedSen)
+            yield taggedSen
         sys.stderr.write(str(senCount)+'...done\n')

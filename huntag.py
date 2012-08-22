@@ -31,9 +31,16 @@ def main_bigramTrain(options, input):
     bigramModel.writeToFile(options.bigramModelFile)
         
 def main_tag(featureSet, options, input):
+    labelCounter, featCounter = BookKeeper(), BookKeeper()
+    labelCounter.readFromFile('{0}.labelNumbers'.format(options.modelName))
+    featCounter.readFromFile('{0}.featureNumbers'.format(options.modelName))
     optionsDict = vars(options)
+    optionsDict['labelCounter'] = labelCounter
+    optionsDict['featCounter'] = featCounter
+    optionsDict['modelFile'] = '{0}.model'.format(options.modelName)
     tagger = Tagger(featureSet, optionsDict)
-    tagger.tag(input)    
+    for taggedSen in tagger.tag(input):
+        writeSentence(taggedSen)
 
 def getFeatureSet(cfgFile):
     features = {}
