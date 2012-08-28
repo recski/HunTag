@@ -563,7 +563,14 @@ def runEval(stdin, goldField='-2', autoField='-1', mode='BI', conll=False, bPoin
         patternCount = getChunkPatterns(tF, int(goldField), int(autoField), mode)
     
         printPatterns(patternCount)
-    
+
+def evalInput(input, autoField=-1, goldField=-2):
+    chunks = getChunksFromCorp(input, goldField, autoField, 'BI', False)
+    chunkCounts = evaluate(chunks)
+    tokCounts = countToks(input, goldField, autoField)
+    results = count(chunkCounts, tokCounts)
+    printResults(results)
+
 if __name__ == '__main__':
     #runEval(sys.stdin, '-2', '-1', 'BIE1', False, True, True, False, False)
     optfunc.run(runEval)
