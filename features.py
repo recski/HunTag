@@ -246,7 +246,7 @@ def lemmaLowered(word, lemma):
     return ['N/A']
 
 def krPieces(kr) :
-    pieces=nonalf.split(kr)
+    pieces=nonalf.split(kr.split('/')[-1])
     pos=pieces[0]
     feats=[]
     last = ""

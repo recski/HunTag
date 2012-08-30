@@ -2,6 +2,7 @@
 from tools import *
 from liblinearutil import *
 import sys
+from ctypes import *
 
 class Trainer():
     def __init__(self, features, options):
@@ -61,9 +62,13 @@ class Trainer():
                 if self.usedFeats:
                     tokFeats = [feat for feat in tokFeats
                                 if feat in self.usedFeats]
-                featNumbers = [self.featCounter.getNo(feat)
-                               for feat in tokFeats]
-                context = dict([(featNo, 1) for featNo in featNumbers])
+                featNumbers = set([self.featCounter.getNo(feat)
+                               for feat in tokFeats])
+                
+                context = ((c_int*2)*len(featNumbers))()
+                for i, no in enumerate(featNumbers):
+                    context[i][1]=1
+                    context[i][0]=no
                 label = self.labelCounter.getNo(tok[-1])
                 self.contexts.append(context)
                 self.labels.append(label)
