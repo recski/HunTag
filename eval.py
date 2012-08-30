@@ -20,7 +20,7 @@ def getChunksFromColumn(taggedFile, field, mode, strict):
     for c,line in enumerate(taggedFile):
         if line=='\n':
             continue
-        try:
+	try:
             tag = line.split()[field]
         except IndexError:
             print
@@ -565,14 +565,15 @@ def runEval(stdin, goldField='-2', autoField='-1', mode='BI', conll=False, bPoin
         printPatterns(patternCount)
 
 def evalInput(input, autoField=-1, goldField=-2):
-    inString = ''
+    corp = []
     for sen in input:
         for tok in sen:
-            inString+='\t'.join(tok)+'\n'
-        inString+='\n'
-    chunks = getChunksFromCorp(inString, goldField, autoField, 'BI', False)
+            corp.append('\t'.join(tok)+'\n')
+        corp.append('\n')
+    
+    chunks = getChunksFromCorp(corp, goldField, autoField, 'BI', False)
     chunkCounts = evaluate(chunks)
-    tokCounts = countToks(input, goldField, autoField)
+    tokCounts = countToks(corp, goldField, autoField)
     results = count(chunkCounts, tokCounts)
     printResults(results)
 
