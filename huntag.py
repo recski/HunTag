@@ -10,7 +10,6 @@ from tools import *
 import math
 import sys
 
-from guppy import hpy
 
 def main_train(featureSet, options, input=sys.stdin):
     optionsDict = vars(options)
@@ -18,9 +17,6 @@ def main_train(featureSet, options, input=sys.stdin):
         optionsDict['usedFeats'] = file(options.usedFeats)
     trainer = Trainer(featureSet, optionsDict)
     trainer.getEvents(input)
-    h = hpy()
-    print h.heap()
-    #sys.exit()
     trainer.cutoffFeats()
     if options.outFeatFile:
         trainer.writeFeats(options.outFeatFile)
