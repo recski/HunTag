@@ -565,7 +565,12 @@ def runEval(stdin, goldField='-2', autoField='-1', mode='BI', conll=False, bPoin
         printPatterns(patternCount)
 
 def evalInput(input, autoField=-1, goldField=-2):
-    chunks = getChunksFromCorp(input, goldField, autoField, 'BI', False)
+    inString = ''
+    for sen in input:
+        for tok in sen:
+            inString+='\t'.join(tok)+'\n'
+        inString+='\n'
+    chunks = getChunksFromCorp(inString, goldField, autoField, 'BI', False)
     chunkCounts = evaluate(chunks)
     tokCounts = countToks(input, goldField, autoField)
     results = count(chunkCounts, tokCounts)
