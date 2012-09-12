@@ -2,7 +2,10 @@
 from collections import defaultdict
 def sentenceIterator(input):
     currSen = []
-    for line in input:
+    while True:
+        line = input.readline()
+        if not line:
+            break
         if line == '\n' and currSen!=[]:
             yield currSen
             currSen = []

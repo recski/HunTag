@@ -31,7 +31,8 @@ class Trainer():
         featFile = open(fileName, 'w')
         for i, context in enumerate(self.contexts):
             label = self.labelCounter.noToFeat[self.labels[i]]
-            feats = [self.featCounter.noToFeat[c] for c in context.keys()]
+            feats = [self.featCounter.noToFeat[c]
+                     for c in [feat[0] for feat in context]]
             featFile.write('{0}\t{1}\n'.format(label, ' '.join(feats)))
     
     def reduceContexts(self):

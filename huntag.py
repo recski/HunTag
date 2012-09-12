@@ -30,7 +30,7 @@ def main_bigramTrain(options, input):
         bigramModel.obsSequence(tags)
     bigramModel.count()
     bigramModel.writeToFile(options.bigramModelFile)
-        
+
 def main_tag(featureSet, options, input):
     labelCounter, featCounter = BookKeeper(), BookKeeper()
     labelCounter.readFromFile('{0}.labelNumbers'.format(options.modelName))
@@ -42,6 +42,7 @@ def main_tag(featureSet, options, input):
     tagger = Tagger(featureSet, optionsDict)
     for taggedSen in tagger.tag(input):
         writeSentence(taggedSen)
+        sys.stdout.flush()
 
 def getFeatureSet(cfgFile):
     features = {}
@@ -124,6 +125,9 @@ def main():
         if task == 'train':
             main_train(featureSet, options)
         elif task == 'tag':
+            #for line in sys.stdin:
+            #    foo.write(line)
+            #sys.exit()
             main_tag(featureSet, options, sys.stdin)
         else:
             sys.stderr.write("""invalid task: %s\nRun huntag.py --help
