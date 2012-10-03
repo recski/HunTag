@@ -14,7 +14,10 @@ def viterbi(transProbs, tagProbsByPos, languageModelWeight, boundarySymbol='S'):
     states = transProbs.tags
     # Initialize base cases (t == 0)
     for y in states:
-        V[0][y] = transProbs.logProb(boundarySymbol,y)+tagProbsByPos[0][y]-transProbs.unigramLogProb[y]
+        trProb = transProbs.logProb(boundarySymbol,y)
+        tagProb = tagProbsByPos[0][y]
+        unigrProb = transProbs.unigramLogProb[y]
+        V[0][y] = trProb+tagProb-unigrProb
         path[y] = [y]
  
     # Run Viterbi for t > 0

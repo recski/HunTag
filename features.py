@@ -208,6 +208,8 @@ def ngrams(word, options) :
             f.append(str(word[c:c+n]))
     return f
 
+def firstChar(word):
+    return [word[0]]
 
 def msdPos(msd):
     return msd[1]
