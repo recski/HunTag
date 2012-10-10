@@ -92,12 +92,12 @@ def getParser():
                       metavar='FILE')                              
 
     parser.add_option('-l', '--language-model-weight', dest='lmw',
-		              type='float', default=1,
-		              help='set relative weight of the language model to L',
+                      type='float', default=1,
+                      help='set relative weight of the language model to L',
                       metavar='L')
 
     parser.add_option('-o', '--cutoff', dest='cutoff', type='int', default=1,
-		              help='set global cutoff to C', metavar='C') 
+                      help='set global cutoff to C', metavar='C') 
 
     parser.add_option('-p', '--parameters', dest='trainParams',
                       help='pass PARAMS to trainer', metavar='PARAMS')
@@ -111,7 +111,7 @@ def getParser():
                                        
     parser.add_option('-t', '--tag-field', dest='tagField', type='int',
                       help="""specify FIELD containing the tags to build bigram
-		              model from""", metavar='FIELD')
+                      model from""", metavar='FIELD')
     return parser
     
 def main():
@@ -131,7 +131,7 @@ def main():
             main_tag(featureSet, options, sys.stdin)
         else:
             sys.stderr.write("""invalid task: %s\nRun huntag.py --help
-			                    for more information\n""" % task)
+                                for more information\n""" % task)
     return
 
 if __name__=='__main__':
