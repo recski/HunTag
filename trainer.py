@@ -1,8 +1,9 @@
 #trainer.py is a module of HunTag and is used to train maxent models
-from tools import *
-from liblinearutil import *
 import sys
-from ctypes import *
+from tools import BookKeeper, sentenceIterator, featurizeSentence
+from liblinearutil import train, problem, parameter, save_model
+from ctypes import c_int
+
 
 class Trainer():
     def __init__(self, features, options):

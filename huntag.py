@@ -5,9 +5,8 @@ from feature import Feature
 from trainer import Trainer
 from tagger import Tagger
 from bigram import Bigram
-from tools import *
+from tools import BookKeeper, writeSentence, sentenceIterator
 
-import math
 import sys
 
 

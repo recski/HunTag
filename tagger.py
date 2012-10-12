@@ -1,7 +1,7 @@
 from viterbi import viterbi
 from bigram import Bigram
-from liblinearutil import *
-from tools import *
+from liblinearutil import load_model, predict
+from tools import sentenceIterator, featurizeSentence, addTagging
 import math
 import sys
 

@@ -2,7 +2,7 @@
 from lexicon import Lexicon
 import sys
 
-from features import * 
+import features
 
 class Feature():
     def __init__(self, kind, name, actionName, fields, radius, cutoff, options ) :
@@ -19,10 +19,10 @@ class Feature():
                 sys.exit(-1)
             self.lexicon = Lexicon(actionName)
         elif kind in ("token","sentence") :
-            if actionName not in globals() :
+            if actionName not in features.__dict__:
                 sys.stderr.write( "Unknown operator named "+actionName+"\n" )
                 sys.exit(-1)
-            self.function = globals()[actionName]
+            self.function = features.__dict__[actionName]
         else :
             assert False
 
