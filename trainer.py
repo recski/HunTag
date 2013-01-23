@@ -64,20 +64,33 @@ class Trainer():
                 if self.usedFeats:
                     tokFeats = [feat for feat in tokFeats
                                 if feat in self.usedFeats]
-                featNumbers = set([self.featCounter.getNo(feat)
-                               for feat in tokFeats])
-                
-                context = ((c_int*2)*len(featNumbers))()
-                for i, no in enumerate(featNumbers):
-                    context[i][1]=1
-                    context[i][0]=no
-                label = self.labelCounter.getNo(tok[-1])
-                self.contexts.append(context)
-                self.labels.append(label)
+                self.addContext(tokFeats, tok[-1])
             if senCount % 1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
-            
+
         sys.stderr.write(str(senCount)+'...done!\n')
+
+    def getEventsFromFile(self, fileName):
+        for line in file(fileName):
+            l = line.strip().split()
+            label, feats = l[0], l[1:]
+            self.addContext(feats, label)
+
+    def addContext(self, tokFeats, label):
+        tokFeats.sort()
+        """features are sorted to ensure identical output
+           no matter where the features are coming from"""
+        featNumbers = set([self.featCounter.getNo(feat)
+                           for feat in tokFeats])
+    
+        context = ((c_int*2)*len(featNumbers))()
+        for i, no in enumerate(featNumbers):
+            context[i][1]=1
+            context[i][0]=no
+        labelNumber = self.labelCounter.getNo(label)
+        self.contexts.append(context)
+        self.labels.append(labelNumber)
+                       
         
     def train(self):
         sys.stderr.write('creating training problem...')
@@ -85,3 +98,5 @@ class Trainer():
         sys.stderr.write('done\ntraining with option(s) "'+self.parameters+'"...')
         self.model = train(prob, parameter(self.parameters))
         sys.stderr.write('done\n')
+
+

@@ -15,7 +15,10 @@ def main_train(featureSet, options, input=sys.stdin):
     if options.usedFeats:
         optionsDict['usedFeats'] = file(options.usedFeats)
     trainer = Trainer(featureSet, optionsDict)
-    trainer.getEvents(input)
+    if options.inFeatFile:
+        trainer.getEventsFromFile(options.inFeatFile)
+    else:
+        trainer.getEvents(input)
     trainer.cutoffFeats()
     if options.outFeatFile:
         trainer.writeFeats(options.outFeatFile)
@@ -105,6 +108,9 @@ def getParser():
                       help='limit used features to those in FILE',
                       metavar='FILE')
 
+    parser.add_option('-i', '--input-feature-file', dest='inFeatFile',
+                      help='use training events in FILE', metavar='FILE')
+     
     parser.add_option('-f', '--feature-file', dest='outFeatFile',
                       help='write training events to FILE', metavar='FILE')
                                        
