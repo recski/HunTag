@@ -18,10 +18,8 @@ def main_train(featureSet, options, input=sys.stdin):
     if options.inFeatFile:
         trainer.getEventsFromFile(options.inFeatFile)
     else:
-        trainer.getEvents(input)
+        trainer.getEvents(input, options.outFeatFile)
     trainer.cutoffFeats()
-    if options.outFeatFile:
-        trainer.writeFeats(options.outFeatFile)
     trainer.train()
     trainer.save()
 
@@ -42,7 +40,12 @@ def main_tag(featureSet, options, input):
     optionsDict['featCounter'] = featCounter
     optionsDict['modelFile'] = '{0}.model'.format(options.modelName)
     tagger = Tagger(featureSet, optionsDict)
-    for taggedSen in tagger.tag(input):
+    if options.inFeatFile:
+        tagger_func = lambda: tagger.tag_features(options.inFeatFile)
+    else:
+        tagger_func = lambda: tagger.tag_corp(input)
+
+    for taggedSen in tagger_func():
         writeSentence(taggedSen)
         sys.stdout.flush()
 

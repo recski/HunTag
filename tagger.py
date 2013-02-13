@@ -50,16 +50,35 @@ class Tagger():
         
         return logTagProbsByPos
         
-    def tag(self, input):
+    
+    def tag_features(self, file_name):
+        sen_feats = []
+        senCount = 0
+        for line in file(file_name):
+            if line == '\n':
+                senCount+=1
+                tagging = self.tag_sen_feats(sen_feats)
+                yield [[tag] for tag in tagging]
+                sen_feats = []
+                if senCount%1000 == 0:
+                    sys.stderr.write(str(senCount)+'...')
+            sen_feats.append(line.strip().split())
+        sys.stderr.write(str(senCount)+'...done\n')
+
+    def tag_corp(self, input):
         senCount = 0
         for sen in sentenceIterator(input):
             senCount += 1
             senFeats = featurizeSentence(sen, self.featureSet)
-            logTagProbsByPos = self.getLogTagProbsByPos(senFeats)
-            _, bestTagging = viterbi(self.transProbs, logTagProbsByPos,
-                                     self.lmw)
+            bestTagging = self.tag_sen_feats(senFeats)
             taggedSen = addTagging(sen, bestTagging)
+            yield taggedSen
             if senCount%1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
-            yield taggedSen
         sys.stderr.write(str(senCount)+'...done\n')
+        
+    def tag_sen_feats(self, sen_feats):
+        logTagProbsByPos = self.getLogTagProbsByPos(sen_feats)
+        _, bestTagging = viterbi(self.transProbs, logTagProbsByPos,
+                                 self.lmw)
+        return bestTagging

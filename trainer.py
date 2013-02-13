@@ -29,6 +29,7 @@ class Trainer():
         sys.stderr.write('done\n')
 
     def writeFeats(self, fileName):
+        """obsolete"""
         featFile = open(fileName, 'w')
         for i, context in enumerate(self.contexts):
             label = self.labelCounter.noToFeat[self.labels[i]]
@@ -53,9 +54,12 @@ class Trainer():
         sys.stderr.write('done!\n')
         self.reduceContexts()
             
-    def getEvents(self, data):
+    def getEvents(self, data, out_file_name):
         sys.stderr.write('featurizing sentences...')
         senCount = 0
+        out_file = None
+        if out_file_name:
+            out_file = open(out_file_name, 'w')
         for sen in sentenceIterator(data):
             senCount+=1
             sentenceFeats = featurizeSentence(sen, self.features)
@@ -64,7 +68,11 @@ class Trainer():
                 if self.usedFeats:
                     tokFeats = [feat for feat in tokFeats
                                 if feat in self.usedFeats]
+                if out_file:
+                    out_file.write(' '.join(tokFeats)+'\n')
                 self.addContext(tokFeats, tok[-1])
+            if out_file:
+                out_file.write('\n')
             if senCount % 1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
 
@@ -72,6 +80,7 @@ class Trainer():
 
     def getEventsFromFile(self, fileName):
         for line in file(fileName):
+            if line == '\n': continue
             l = line.strip().split()
             label, feats = l[0], l[1:]
             self.addContext(feats, label)
