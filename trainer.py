@@ -69,7 +69,7 @@ class Trainer():
                     tokFeats = [feat for feat in tokFeats
                                 if feat in self.usedFeats]
                 if out_file:
-                    out_file.write(' '.join(tokFeats)+'\n')
+                    out_file.write(tok[-1]+'\t'+' '.join(tokFeats)+'\n')
                 self.addContext(tokFeats, tok[-1])
             if out_file:
                 out_file.write('\n')
