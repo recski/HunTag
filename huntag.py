@@ -128,18 +128,18 @@ def main():
     task = args[0]
     if task == 'bigram-train':
         main_bigramTrain(options, sys.stdin)
-    else:
+    elif task == 'train':
         featureSet = getFeatureSet(options.cfgFile)
-        if task == 'train':
-            main_train(featureSet, options)
-        elif task == 'tag':
-            #for line in sys.stdin:
-            #    foo.write(line)
-            #sys.exit()
-            main_tag(featureSet, options, sys.stdin)
+        main_train(featureSet, options)
+    elif task == 'tag':
+        if options.inFeatFile:
+            featureSet = None
         else:
-            sys.stderr.write("""invalid task: %s\nRun huntag.py --help
-                                for more information\n""" % task)
+            featureSet = getFeatureSet(options.cfgFile)        
+        main_tag(featureSet, options, sys.stdin)    
+    else:
+        sys.stderr.write("""invalid task: %s\nRun huntag.py --help
+                            for more information\n""" % task)
     return
 
 if __name__=='__main__':
