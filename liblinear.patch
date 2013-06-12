@@ -1,0 +1,55 @@
+*** liblinear.py	Wed Apr 25 07:32:21 2012
+--- liblinear.py	Thu Aug 30 10:59:42 2012
+***************
+*** 42,55 ****
+  	_types = [c_int, c_double]
+  	_fields_ = genFields(_names, _types)
+  
+  def gen_feature_nodearray(xi, feature_max=None, issparse=True):
+  	if isinstance(xi, dict):
+  		index_range = xi.keys()
+  	elif isinstance(xi, (list, tuple)):
+  		xi = [0] + xi  # idx should start from 1
+  		index_range = range(1, len(xi))
+  	else:
+! 		raise TypeError('xi should be a dictionary, list or tuple')
+  
+  	if feature_max:
+  		assert(isinstance(feature_max, int))
+--- 42,77 ----
+  	_types = [c_int, c_double]
+  	_fields_ = genFields(_names, _types)
+  
++ def gen_feature_nodearray_from_array(xi, feature_max=None, issparse=True):
++ 	values = xi
++ 	if feature_max:
++ 		assert(isinstance(feature_max, int))
++ 		values = filter(lambda x: x[0] <= feature_max, values)
++ 	if issparse: 
++ 		values = filter(lambda x: x[1] != 0, values)
++ 
++ 	values = sorted(values, key=lambda x: x[0])
++ 	ret = (feature_node * (len(values)+2))()
++ 	ret[-1].index = -1 # for bias term
++ 	ret[-2].index = -1
++ 	for idx, (feature, value) in enumerate(values):
++ 		ret[idx].index = feature
++ 		ret[idx].value = value
++ 	max_idx = 0
++ 	if values: 
++ 		max_idx = values[-1][0]
++ 	return ret, max_idx
++ 
+  def gen_feature_nodearray(xi, feature_max=None, issparse=True):
+  	if isinstance(xi, dict):
+  		index_range = xi.keys()
+  	elif isinstance(xi, (list, tuple)):
+  		xi = [0] + xi  # idx should start from 1
+  		index_range = range(1, len(xi))
++ 	elif isinstance(xi, Array):
++ 		return gen_feature_nodearray_from_array(xi, feature_max, issparse)
+  	else:
+! 		raise TypeError('xi should be a dictionary, list, tuple or ctypes.Array')
+  
+  	if feature_max:
+  		assert(isinstance(feature_max, int))
