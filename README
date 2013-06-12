@@ -9,6 +9,10 @@ http://www.csie.ntu.edu.tw/~cjlin/liblinear/
 
 In order for HunTag to work, Liblinear should be compiled with python bindings and the directory containing the python files `liblinearutil.py' and `liblinear.py' should be added to the environment variable PYTHONPATH.
 
+IMPORTANT: after installing Liblinear, the python bindings must be patched by cd-ing to the python subdirectory of your liblinear installation and running
+patch < (*path-to-HunTag*)/liblinear.patch
+This allows liblinear to handle the more memory-efficient cType input used by HunTag
+
 === DATA FORMAT ===
 
 Input data must be a tab-separated file with one word per line and an empty
