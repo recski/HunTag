@@ -1,21 +1,32 @@
 #Miscellaneous tools for HunTag
+# vim: set expandtab: 
 from collections import defaultdict
 def sentenceIterator(input):
     currSen = []
+    currComment = None
     while True:
         line = input.readline()
         if not line:
             break
+        if line.startswith('"""'):
+            if currSen:
+                sys.stderr.write('ERROR: comments are only allowed before a sentence\n')
+                sys.exit(-1)
+            else:
+                curComment = line.strip()
+                continue
         if line == '\n' and currSen!=[]:
-            yield currSen
+            yield currSen, curComment
             currSen = []
+            currComment = None
             continue
         currSen.append(line.strip().split())
     if currSen!=[]:
-        yield currSen
+        yield currSen, curComment
     return
 
-def writeSentence(sen):
+def writeSentence(sen, comment):
+    print comment
     for tok in sen:
         print '\t'.join(tok)
     print

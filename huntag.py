@@ -25,7 +25,7 @@ def main_train(featureSet, options, input=sys.stdin):
 
 def main_bigramTrain(options, input):
     bigramModel = Bigram(0.000000000000001)
-    for sen in sentenceIterator(input):
+    for sen, _ in sentenceIterator(input):
         tags = [tok[options.tagField] for tok in sen]
         bigramModel.obsSequence(tags)
     bigramModel.count()
@@ -45,8 +45,8 @@ def main_tag(featureSet, options, input):
     else:
         tagger_func = lambda: tagger.tag_corp(input)
 
-    for taggedSen in tagger_func():
-        writeSentence(taggedSen)
+    for taggedSen, comment in tagger_func():
+        writeSentence(taggedSen, comment)
         sys.stdout.flush()
 
 def getFeatureSet(cfgFile):

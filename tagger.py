@@ -1,3 +1,4 @@
+# vim: set expandtab: 
 from viterbi import viterbi
 from bigram import Bigram
 from liblinearutil import load_model, predict
@@ -67,12 +68,14 @@ class Tagger():
 
     def tag_corp(self, input):
         senCount = 0
-        for sen in sentenceIterator(input):
+        for sen, comment in sentenceIterator(input):
             senCount += 1
+            #sys.stderr.write(str(sen)+'\n')
+            #sys.stderr.flush()
             senFeats = featurizeSentence(sen, self.featureSet)
             bestTagging = self.tag_sen_feats(senFeats)
             taggedSen = addTagging(sen, bestTagging)
-            yield taggedSen
+            yield taggedSen, comment
             if senCount%1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
         sys.stderr.write(str(senCount)+'...done\n')

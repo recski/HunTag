@@ -60,7 +60,7 @@ class Trainer():
         out_file = None
         if out_file_name:
             out_file = open(out_file_name, 'w')
-        for sen in sentenceIterator(data):
+        for sen, _ in sentenceIterator(data):
             senCount+=1
             sentenceFeats = featurizeSentence(sen, self.features)
             for c, tok in enumerate(sen):
