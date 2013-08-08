@@ -1,6 +1,7 @@
 #Miscellaneous tools for HunTag
 # vim: set expandtab: 
 from collections import defaultdict
+import sys
 def sentenceIterator(input):
     currSen = []
     currComment = None
@@ -13,20 +14,21 @@ def sentenceIterator(input):
                 sys.stderr.write('ERROR: comments are only allowed before a sentence\n')
                 sys.exit(-1)
             else:
-                curComment = line.strip()
+                currComment = line.strip()
                 continue
         if line == '\n' and currSen!=[]:
-            yield currSen, curComment
+            yield currSen, currComment
             currSen = []
             currComment = None
             continue
         currSen.append(line.strip().split())
     if currSen!=[]:
-        yield currSen, curComment
+        yield currSen, currComment
     return
 
 def writeSentence(sen, comment):
-    print comment
+    if comment:
+        print comment
     for tok in sen:
         print '\t'.join(tok)
     print
