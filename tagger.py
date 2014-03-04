@@ -1,10 +1,10 @@
-# vim: set expandtab: 
 from viterbi import viterbi
 from bigram import Bigram
 from liblinearutil import load_model, predict
 from tools import sentenceIterator, featurizeSentence, addTagging
 import math
 import sys
+import os
 
 class Tagger():
     def __init__(self, featureSet, options):
@@ -20,16 +20,15 @@ class Tagger():
         self.featCounter = options['featCounter']
         sys.stderr.write('done\n')
 
-
     def getNumberedSenFeats(self, senFeats):
-        return [ [self.featCounter.getNo(feat)
-                 for feat in feats]
-               for feats in senFeats]
-        
+        return [[self.featCounter.getNo(feat)
+            for feat in feats]
+                for feats in senFeats]
+
     def getLogTagProbsByPos(self, senFeats):
         numberedSenFeats = self.getNumberedSenFeats(senFeats)
         contexts = [dict([(feat, 1) for feat in feats])
-                           for feats in numberedSenFeats]
+            for feats in numberedSenFeats]
         dummyOutcomes = [1 for c in contexts]
         _, __, probDistsByPos = predict(dummyOutcomes, contexts,
                                         self.model, self.params)
@@ -40,7 +39,7 @@ class Tagger():
                                    for i, prob in enumerate(probDist)])
                                    for probDist in probDistsByPos]
         """
-        
+
         logTagProbsByPos = []
         for probDist in probDistsByPos:
             logProbsByTag = {}
@@ -48,23 +47,31 @@ class Tagger():
                 tag = self.labelCounter.noToFeat[c+1]
                 logProbsByTag[tag] = math.log(prob)
             logTagProbsByPos.append(logProbsByTag)
-        
+
         return logTagProbsByPos
-        
-    
+
     def tag_features(self, file_name):
         sen_feats = []
         senCount = 0
         for line in file(file_name):
             if line == '\n':
-                senCount+=1
+                senCount += 1
                 tagging = self.tag_sen_feats(sen_feats)
                 yield [[tag] for tag in tagging]
                 sen_feats = []
-                if senCount%1000 == 0:
+                if senCount % 1000 == 0:
                     sys.stderr.write(str(senCount)+'...')
             sen_feats.append(line.strip().split())
         sys.stderr.write(str(senCount)+'...done\n')
+
+    def tag_dir(self, dir_name):
+        for fn in os.listdir(dir_name):
+            sys.stderr.write('processing file {}...'.format(fn))
+            try:
+                for sen, _ in self.tag_corp(open(os.path.join(dir_name, fn))):
+                    yield sen, fn
+            except:
+                sys.stderr.write('error in file {}\n'.format(fn))
 
     def tag_corp(self, input):
         senCount = 0
@@ -76,10 +83,10 @@ class Tagger():
             bestTagging = self.tag_sen_feats(senFeats)
             taggedSen = addTagging(sen, bestTagging)
             yield taggedSen, comment
-            if senCount%1000 == 0:
+            if senCount % 1000 == 0:
                 sys.stderr.write(str(senCount)+'...')
         sys.stderr.write(str(senCount)+'...done\n')
-        
+
     def tag_sen_feats(self, sen_feats):
         logTagProbsByPos = self.getLogTagProbsByPos(sen_feats)
         _, bestTagging = viterbi(self.transProbs, logTagProbsByPos,
