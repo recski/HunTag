@@ -125,9 +125,7 @@ Huntag is made available under the GNU Lesser General Public License v3.0. If yo
 
 If you use the tool, please cite the following paper:
 
-Gábor Recski, Dániel Varga
-A Hungarian NP-chunker
-The Odd Yearbook, (2009)
+Gábor Recski, Dániel Varga (2009): A Hungarian NP-chunker In: *The Odd Yearbook. ELTE SEAS Undergraduate Papers in Linguistics*. Budapest: ELTE School of English and American Studies. pp. 87-93
 
 ```
 @article{Recski:2009a,
@@ -143,9 +141,7 @@ The Odd Yearbook, (2009)
 
 If you use some specialized version for Hungarian, please also cite the following paper:
 
-Dóra Csendes, János Csirik, Tibor Gyimóthy and András Kocsor
-The Szeged Treebank
-Text, Speech and Dialogue, Lecture Notes in Computer Science, Volume 3658/2005, (2005)
+Dóra Csendes, János Csirik, Tibor Gyimóthy and András Kocsor (2005): The Szeged Treebank. In: *Text, Speech and Dialogue. Lecture Notes in Computer Science* Volume 3658/2005, Springer: Berlin. pp. 123-131.
 
 ```
 @inproceedings{Csendes:2005,
