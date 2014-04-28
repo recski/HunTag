@@ -119,8 +119,9 @@ Non-mandatory options:
 Huntag was created by Gábor Recski and Dániel Varga. It is a reimplementation and generalization of a Named Entity Recognizer built by Dániel Varga and Eszter Simon.
 License
 
-Huntag is made available under the GNU Lesser General Public License v3.0. If you received Huntag in a package that also contain the Hungarian training corpora for Named Entity Recoginition and chunking task, then please note that these corpora are derivative works based on the Szeged Treebank, and they are made available under the same restrictions that apply to the original Szeged Treebank.
-Reference
+Huntag is made available under the GNU Lesser General Public License v3.0. If you received Huntag in a package that also contain the Hungarian training corpora for Named Entity Recoginition and chunking task, then please note that these corpora are derivative works based on the Szeged Treebank, and they are made available under the same restrictions that apply to the original Szeged Treebank
+
+#Reference
 
 If you use the tool, please cite the following paper:
 
