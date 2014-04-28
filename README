@@ -2,7 +2,7 @@ Huntag - a sequential tagger for NLP combining the linear classificator Liblinea
 Based on training data, Huntag can perform any kind of sequential sentence
 tagging and has been used for NP chunking and Named Entity Recognition.
 
-=== REQUIREMENTS ===
+#Requirements
 HunTag uses the Liblinear package, which can be downloaded from:
 
 http://www.csie.ntu.edu.tw/~cjlin/liblinear/
@@ -13,7 +13,7 @@ IMPORTANT: after installing Liblinear, the python bindings must be patched by cd
 patch < (*path-to-HunTag*)/liblinear.patch
 This allows liblinear to handle the more memory-efficient cType input used by HunTag
 
-=== DATA FORMAT ===
+#Data format
 
 Input data must be a tab-separated file with one word per line and an empty
 line to mark sentence boundaries. Each line must contain the same number of
@@ -26,7 +26,7 @@ of multi-word phrases (E-NP). The first two characters of answer tags
 should always conform to one of these two conventions, the rest may be any
 string describing the category. 
 
-=== FEATURES ===
+#Features
 
 The flexibility of Huntag comes from the fact that it will generate any kind
 of features from the input data given the appropriate python functions.
@@ -38,7 +38,7 @@ Once the desired features are implemented, a data set and a configuration
 file containing the list of feature functions to be used are all Huntag
 needs to perform training and tagging.
 
-=== CONFIG FILE ===
+#Config file
 The configuration file lists the features that are to be used for a given task. The feature file may start with a command specifying the default radius for features. This is non-mandatory. Example:
 !defaultRadius 5
 
@@ -65,10 +65,10 @@ For sentence features, the input is aggregated sentence-wise into a list, and th
 For lex features, the second argument specifies a lexicon file rather than a python function name. The specified token field is matched against this lexicon file.
 
 
-=== USAGE ===
+#Usage
 HunTag may be run in any of the following three modes:
 
-TRAIN
+##train
 used to train a Liblinear model given a training corpus and a set of feature functions. When run in TRAIN mode, HunTag creates three files, one containing the liblinear mode and two listing features and labels and the integers they are mapped to when passed to liblinear. With the --model option set to NAME, the three files will be stored under NAME.model, NAME.featureNumbers and NAME.labelNumbers respectively.
 
 cat TRAINING_DATA | python huntag.py train OPTIONS
@@ -86,7 +86,7 @@ Non-mandatory options:
         write training events to FILE
 
 
-BIGRAM-TRAIN
+##bigram-train
 Used to train a bigram language model using a given field of the training data
 
 cat TRAINING_DATA | python huntag.py bigram-train OPTIONS
@@ -97,7 +97,7 @@ Mandatory options:
     -t FIELD, --tag-field=FIELD
         specify FIELD containing the tags to build bigram
 
-TAG
+##tag
 Used to tag input. Given a maxent model providing the value P(t|w) for all tags t and words (set of feature values) w, and a bigram language model supplying P(t|t0) for all pairs of tags, HunTag will assign to each sentence the most likely tag sequence.
 
 cat INPUT | python huntag.py tag OPTIONS
@@ -113,3 +113,23 @@ Mandatory options:
 Non-mandatory options:
     -l L, --language-model-weight=L
         set weight of the language model to L (default is 1)
+
+#Authors
+
+Huntag was created by Gábor Recski and Dániel Varga. It is a reimplementation and generalization of a Named Entity Recognizer built by Dániel Varga and Eszter Simon.
+License
+
+Huntag is made available under the GNU Lesser General Public License v3.0. If you received Huntag in a package that also contain the Hungarian training corpora for Named Entity Recoginition and chunking task, then please note that these corpora are derivative works based on the Szeged Treebank, and they are made available under the same restrictions that apply to the original Szeged Treebank.
+Reference
+
+If you use the tool, please cite the following paper:
+
+Gábor Recski, Dániel Varga
+A Hungarian NP-chunker
+The Odd Yearbook, (2009)
+
+If you use some specialized version for Hungarian, please also cite the following paper:
+
+Dóra Csendes, János Csirik, Tibor Gyimóthy and András Kocsor
+The Szeged Treebank
+Text, Speech and Dialogue, Lecture Notes in Computer Science, Volume 3658/2005, (2005)
