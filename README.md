@@ -129,6 +129,7 @@ Gábor Recski, Dániel Varga
 A Hungarian NP-chunker
 The Odd Yearbook, (2009)
 
+```
 @article{Recski:2009a,
    author={Recski, G\'abor and D\'aniel Varga},
    title={{A Hungarian NP Chunker}},
@@ -138,7 +139,7 @@ The Odd Yearbook, (2009)
    pages= {87--93}, 
    year={2009}
 }
-
+```
 
 If you use some specialized version for Hungarian, please also cite the following paper:
 
@@ -146,6 +147,7 @@ Dóra Csendes, János Csirik, Tibor Gyimóthy and András Kocsor
 The Szeged Treebank
 Text, Speech and Dialogue, Lecture Notes in Computer Science, Volume 3658/2005, (2005)
 
+```
 @inproceedings{Csendes:2005,
    author={Csendes, D{\'o}ra and Csirik, J{\'a}nos and Gyim{\'o}thy, Tibor and Kocsor, Andr{\'a}s},
    title={The {S}zeged {T}reebank},
@@ -154,4 +156,4 @@ Text, Speech and Dialogue, Lecture Notes in Computer Science, Volume 3658/2005, 
    pages={123-131},
    publisher={Springer}
 }
-
+```
