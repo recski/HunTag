@@ -13,6 +13,9 @@ IMPORTANT: after installing Liblinear, the python bindings must be patched by cd
 patch < (*path-to-HunTag*)/liblinear.patch
 This allows liblinear to handle the more memory-efficient cType input used by HunTag
 
+#Pre-trained models
+Pre-trained models for Hungarian NP-chunking and NER are available from the [HunTag webpage](http://hlt.bme.hu/en/software/huntag)
+
 #Data format
 
 Input data must be a tab-separated file with one word per line and an empty
